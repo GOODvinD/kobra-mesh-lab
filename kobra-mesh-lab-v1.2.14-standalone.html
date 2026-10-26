@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src &#x27;none&#x27;; script-src &#x27;sha256-kTUgfLQj4JJrtPxiljt7oMFvrg9Hsko/fRFoRkVaRk0=&#x27; &#x27;sha256-U86dDiFfLQm7a5ESOrIl85hYPiEeovrXyGD4SAZ0LHo=&#x27; &#x27;sha256-6iKOV/cw5bLHpNjUzZqioURu4CPo9Cy1hLz0DgTz5EA=&#x27; &#x27;sha256-Xw6VkUD38pmazPyr9fqzxAnoM/d32R0qBZrDcWG4M38=&#x27;; style-src &#x27;sha256-xQJXgahHGOa0xUlqAfIaHykdGMVNY7qP0x8n8uymF64=&#x27;; img-src data: blob:; connect-src &#x27;none&#x27;; object-src &#x27;none&#x27;; base-uri &#x27;none&#x27;; form-action &#x27;none&#x27;; frame-src &#x27;none&#x27;; worker-src &#x27;none&#x27;; font-src &#x27;none&#x27;; media-src &#x27;none&#x27;; manifest-src &#x27;none&#x27;">
+  <meta name="description" content="Private, offline bed leveling maps and comparison for Anycubic Kobra X diagnostic logs.">
+  <title>Kobra Mesh Lab — Local bed mesh analysis</title>
+  <style>
+:root{color-scheme:dark;--bg:#0b1015;--panel:#141b23;--panel2:#10171e;--stroke:#27333e;--text:#e6f0f3;--muted:#8b9daa;--cyan:#55dbd1;--orange:#fba76c;--blue:#5ea8f7;--red:#f07565}*{box-sizing:border-box}html{scroll-behavior:smooth}body{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;margin:0;font-size:14px;line-height:1.45}body:before{content:"";position:absolute;top:0;left:0;right:0;height:500px;background:radial-gradient(ellipse at 83% -60%,#25615c33,transparent 65%);pointer-events:none}.shell{max-width:1460px;padding:0 44px;margin:auto}button,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.35}code{font:12px ui-monospace,Consolas,monospace;color:#b1e9e3}.topbar{height:78px;border-bottom:1px solid var(--stroke);display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative}.brand{font-weight:780;letter-spacing:.07em;font-size:15px;display:flex;align-items:center;gap:13px}.brand-mark{color:#08110f;border-radius:9px;background:var(--cyan);width:30px;height:30px;display:grid;place-items:center;font-size:28px;font-weight:400;line-height:1}.brand-sub{font-weight:450;color:#acbbc5}.top-right{font-size:12px;color:#a1b2bc;display:flex;align-items:center;gap:9px}.live-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px #55dbd120}.header-rule{color:#4c5b67}.hero{padding:57px 0 46px;border-bottom:1px solid var(--stroke)}.eyebrow,.kicker{font-size:11px;letter-spacing:.2em;font-weight:750;color:var(--cyan)}.hero-line{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(200px,.55fr);gap:56px;align-items:end}.hero h1{font-size:clamp(45px,5.4vw,78px);font-weight:670;letter-spacing:-.065em;line-height:1.02;margin:20px 0}.hero h1 em{font-style:normal;color:var(--cyan)}.hero-aside{color:#a8b8c2;line-height:1.8;max-width:350px;font-size:15px;padding-bottom:22px}.hero-bottom{display:flex;gap:24px;align-items:center;font-size:12px;color:#899eaa;flex-wrap:wrap;margin-top:14px}.pill{display:flex;gap:9px;align-items:center;background:#15332d;border:1px solid #2a6157;border-radius:60px;color:#92ebd7;padding:7px 12px;font-weight:600}.pill i{height:7px;width:7px;background:#71edcf;border-radius:50%}.section{padding:40px 0 39px;border-bottom:1px solid var(--stroke)}.section-heading{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:23px}.section h2{margin:6px 0 0;font-size:24px;letter-spacing:-.04em;font-weight:650}.ghost-button{border:1px solid #314550;background:transparent;color:#c5d6df;border-radius:8px;padding:11px 16px;font-weight:650}.ghost-button:hover,.export-button:hover{border-color:var(--cyan);color:var(--cyan)}.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.input-panel{background:var(--panel2);border:1px solid #31404c;border-radius:12px;overflow:hidden;transition:border-color .2s,background .2s}.input-panel:hover,.input-panel.dragover{border-color:var(--cyan);background:#122028}.input-panel:focus-visible{outline:2px solid var(--cyan)}.slot-heading{display:flex;align-items:center;gap:12px;padding:17px 18px;border-bottom:1px solid #24313c}.slot-symbol{border-radius:6px;display:grid;place-items:center;width:35px;height:35px;font-size:15px;font-weight:780}.slot-symbol.a{background:#1c4545;color:var(--cyan)}.slot-symbol.b{background:#483527;color:var(--orange)}.slot-heading strong,.slot-heading small{display:block}.slot-heading strong{font-size:14px}.slot-heading small{font-size:12px;color:var(--muted)}.slot-flag{margin-left:auto;color:#728793;letter-spacing:.09em;font-size:10px;font-weight:750}.drop-content{height:165px;display:flex;justify-content:center;align-items:center;flex-direction:column;gap:5px;cursor:pointer;text-align:center;padding:10px 15px}.file-icon{display:grid;place-items:center;border:1px dashed #536674;border-radius:10px;color:var(--cyan);width:42px;height:42px;font-size:23px;margin-bottom:8px}.drop-content strong{max-width:90%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}.drop-content span{font-size:12px;color:var(--muted)}.selection{display:flex;justify-content:space-between;gap:14px;align-items:center;border-top:1px solid #25323c;padding:13px 18px}.selection label{font-size:12px;color:var(--muted)}select{background:#1a252e;border:1px solid #344450;border-radius:7px;padding:8px 26px 8px 10px;color:#d9e6e9;max-width:65%;min-width:125px}select:disabled{opacity:.5}.status{color:#98adb8;font-size:12px;min-height:22px;margin:17px 0 0}.status.error{color:#ff9c92}.status.success{color:#91e6d2}.toolbar{display:flex;align-items:center;gap:11px;color:var(--muted);font-size:12px}.summary-grid,.map-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.summary{border:1px solid var(--stroke);background:var(--panel2);border-radius:10px;padding:17px 18px 19px}.summary-head{display:flex;justify-content:space-between;letter-spacing:.12em;color:#91a6b1;font-size:10px;font-weight:750}.legend-dot{height:7px;width:7px;border-radius:50%}.legend-a{background:var(--cyan)}.legend-b{background:var(--orange)}.legend-d{background:#d1b8ed}.summary strong{display:block;font-size:27px;letter-spacing:-.035em;font-weight:700;margin-top:15px}.summary small{font-size:11px;color:var(--muted)}.map-grid{margin-top:16px}.map-card{background:var(--panel);border:1px solid var(--stroke);border-radius:10px;min-width:0;overflow:hidden}.map-header{padding:15px;display:flex;justify-content:space-between;align-items:center;gap:7px;border-bottom:1px solid var(--stroke);font-size:13px}.map-header>div{display:flex;align-items:center;gap:9px}.tag{font-weight:700;font-size:12px;border-radius:5px;padding:4px 8px}.tag-a{background:#214644;color:var(--cyan)}.tag-b{background:#443323;color:var(--orange)}.tag-d{background:#383149;color:#d3b1ff}.mini-info{color:#7f96a3;font-size:10px;white-space:nowrap}.map-body{padding:14px 12px 13px;background:#121b22}.map-body canvas{width:100%;height:auto;display:block;border-radius:4px}.colorbar{display:flex;align-items:center;gap:8px;margin:10px 7px 0;font-size:10px;color:#9eb0b9;font-variant-numeric:tabular-nums}.gradient{height:8px;flex:1;border-radius:4px;background:linear-gradient(90deg,#1c769d,#e7f1eb,#e67459)}.map-footer{padding:12px 14px;font-size:11px;color:#899da9;border-top:1px solid #25313a;min-height:42px}.controls-end{display:flex;flex-wrap:wrap;gap:9px;margin-top:17px}.export-button{border:1px solid #33444e;color:#beced6;background:#18222b;border-radius:7px;padding:10px 13px;font-size:12px;font-weight:650}.notice{background:#352820;border:1px solid #6c4b2a;color:#edc69d;padding:12px 15px;border-radius:8px;margin-top:14px;font-size:12px}.under-chart{display:flex;align-items:end;justify-content:space-between;margin-top:42px;gap:20px}.under-chart p{font-size:12px;color:var(--muted);margin:9px 0}.muted{font-weight:400;color:#79919d;font-size:13px;letter-spacing:0}.surface-box{background:var(--panel2);border:1px solid var(--stroke);border-radius:10px;margin-top:14px;overflow:hidden;position:relative}.surface-box canvas{width:100%;height:auto;display:block}.surface-label{position:absolute;right:18px;bottom:15px;font-size:10px;color:#91a3ae}.insights{margin-top:15px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.insight{border:1px solid var(--stroke);border-radius:10px;padding:17px 18px;background:#121a21}.insight h3{margin:0 0 9px;font-size:14px}.insight p{font-size:12px;color:#9bafba;line-height:1.7;margin:0}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.steps>div{border-left:1px solid #344651;padding:0 20px 3px}.steps span{font-size:11px;color:var(--cyan);font-weight:750}.steps strong{display:block;font-size:14px;margin:10px 0 7px}.steps p{font-size:12px;color:#91a5b0;line-height:1.8;margin:0}.important{margin-top:23px;padding:18px 22px;background:#141d24;border:1px solid #2b3d47;border-radius:10px}.important strong{font-size:13px}.important p{color:#9db0b9;font-size:12px;line-height:1.8;margin:6px 0 0}.important p strong{font-size:12px;color:#d7e1e5}footer{height:auto;min-height:100px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:11px;color:#708692}footer span:first-child{color:#c4d7d9;font-weight:750;letter-spacing:.07em}button:focus-visible,select:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}@media(max-width:1060px){.shell{padding:0 25px}.map-grid{grid-template-columns:1fr 1fr}.difference{grid-column:1 / -1}.map-body canvas{max-width:440px;margin:auto}.summary strong{font-size:23px}}@media(max-width:700px){.shell{padding:0 16px}.topbar{height:66px}.top-right{font-size:10px}.header-rule,.top-right .header-rule~*{display:none}.brand{font-size:12px}.brand-sub{display:none}.hero{padding:42px 0 35px}.hero-line{grid-template-columns:1fr;gap:0}.hero h1{font-size:49px}.hero-aside{padding-bottom:7px}.section{padding:30px 0}.upload-grid,.map-grid,.insights,.steps{grid-template-columns:1fr}.difference{grid-column:auto}.summary-grid{grid-template-columns:1fr 1fr}.summary:last-child{grid-column:1/-1}.summary strong{font-size:24px}.section-heading{align-items:start}.section-heading,.under-chart{flex-wrap:wrap}.toolbar{flex-wrap:wrap}.selection{padding:12px}.steps>div{border-left:none;border-top:1px solid var(--stroke);padding:14px 0 0}footer{flex-direction:column;align-items:start;justify-content:center;padding:23px 0}.muted{display:block}.top-right{white-space:nowrap}}
+/* v1.1: 3D viewing controls, geometric coverage inset and uncertainty note */
+.surface-controls{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;border:1px solid var(--stroke);border-radius:9px;background:#111b22;padding:12px 14px}
+.z-control{flex:1 1 240px;max-width:410px;display:flex;gap:5px;flex-direction:column}
+.z-control label{display:flex;justify-content:space-between;color:#aabfc7;font-weight:600;font-size:12px}
+.z-control output{color:var(--cyan);font-variant-numeric:tabular-nums}
+.z-control input{width:100%;accent-color:var(--cyan);cursor:pointer}
+.range-ends{display:flex;justify-content:space-between;color:#718994;font-size:10px}
+.ghost-button.small{font-size:12px;padding:10px 12px;white-space:nowrap}
+.switch-label{display:flex;gap:6px;align-items:center;font-size:12px;color:#b6cbd0;white-space:nowrap;cursor:pointer}
+.switch-label input{accent-color:var(--cyan)}
+.switch-label input:disabled{opacity:.35;cursor:not-allowed}
+.surface-box canvas{touch-action:none;user-select:none}
+.surface-top-note{position:absolute;top:14px;left:18px;font-size:11px;color:#93bac4;pointer-events:none}
+.surface-label{pointer-events:none}
+.surface-legend{display:flex;flex-wrap:wrap;align-items:center;gap:16px;color:#90a7b3;font-size:11px;margin-top:11px}
+.surface-legend i{display:inline-block;vertical-align:middle;margin-right:5px;width:8px;height:8px;border-radius:50%}
+.surface-legend i.point-a{background:#55dbd1}.surface-legend i.point-b{background:#fba76c}
+.surface-legend span:last-child{margin-left:auto;max-width:600px;text-align:right}
+.shape-note{border-left:2px solid #446575;color:#94acb9;font-size:12px;line-height:1.7;margin:14px 0 0;padding:9px 16px;background:#101920}
+.coverage-box{display:flex;gap:20px;align-items:center;justify-content:space-between;border:1px solid var(--stroke);border-radius:10px;margin-top:16px;padding:15px 20px;background:#101920}
+.coverage-box strong{font-size:13px}.coverage-box p{color:#91aab6;font-size:12px;line-height:1.65;max-width:690px}
+.coverage-box canvas{max-width:38%;height:auto;border-radius:6px;border:1px solid #253745}
+@media(max-width:700px){.surface-controls{align-items:stretch}.z-control{max-width:none;width:100%;flex-basis:100%}.surface-legend span:last-child{text-align:left;margin-left:0}.coverage-box{flex-direction:column;align-items:stretch}.coverage-box canvas{max-width:100%;width:100%}}
+
+/* v1.2 light Kobra X theme override */
+:root{color-scheme:light;--bg:#eef3f7;--panel:#ffffff;--panel2:#f8fbfd;--stroke:#d7e0e7;--text:#1f2a33;--muted:#61707d;--cyan:#5da9e9;--orange:#f47a20;--blue:#5da9e9;--red:#e47a57;--metal-dark:#3a4652;--metal-mid:#5a6875;--metal-light:#8a98a6;--metal-highlight:#b8c2cb;--accent:#f47a20;--accent-hover:#ff8e35;--accent-active:#d96512;--accent-glow:#ffb06a;--text-secondary:#4f6270;--text-muted:#748292}
+body{background:linear-gradient(180deg,#f7fafc 0%,#eef3f7 100%);color:var(--text)}
+body:before{height:420px;background:radial-gradient(ellipse at 84% -55%,rgba(244,122,32,.14),transparent 62%),radial-gradient(ellipse at 14% 0%,rgba(93,169,233,.10),transparent 55%)}
+code{color:#285d8a}
+.topbar,.hero,.section{border-bottom:1px solid var(--stroke)}
+.brand-mark{color:#fff;background:var(--accent)}
+.brand-sub,.slot-heading small,.mini-info,.top-right,.hero-bottom,.hero-aside,.status,.selection label,.toolbar,.map-footer,.important p,.steps p,.under-chart p,.muted,.surface-legend,.shape-note,.coverage-box p,.surface-top-note,.surface-label,footer{color:var(--text-secondary)}
+.header-rule{color:#99a7b3}.live-dot{background:var(--accent);box-shadow:0 0 0 4px rgba(244,122,32,.16)}
+.eyebrow,.kicker{color:var(--accent)}
+.hero h1 em{color:var(--accent)}
+.pill{background:#fff3e8;border:1px solid #ffd3b1;color:#a65014}.pill i{background:var(--accent)}
+.ghost-button{border:1px solid #c8d3db;background:#fff;color:var(--metal-dark)}
+.ghost-button:hover,.export-button:hover{border-color:var(--accent);color:var(--accent);background:#fff8f2}
+.input-panel,.summary,.map-card,.surface-box,.important,.insight,.coverage-box{background:var(--panel);border-color:var(--stroke);box-shadow:0 6px 24px rgba(31,42,51,.05)}
+.input-panel:hover,.input-panel.dragover{border-color:var(--accent);background:#fffaf5}
+.slot-heading,.selection,.map-header{border-color:var(--stroke)}
+.slot-symbol.a{background:#e8f3fb;color:#2d78b7}.slot-symbol.b{background:#fff0e4;color:var(--accent)}
+.tag-a{background:#e8f3fb;color:#2d78b7}.tag-b{background:#fff0e4;color:var(--accent)}.tag-d{background:#f6edff;color:#7b57ae}
+.slot-flag,.summary-head{color:#7a8a97}
+.file-icon{border-color:#bfcbd4;color:var(--accent);background:#fff}
+select{background:#fff;border:1px solid #cad5dd;color:var(--text)}
+.notice{background:#fff6ec;border-color:#ffd1a8;color:#9b551a}
+.map-body{background:#fbfdff}
+.colorbar{color:#60727f}.gradient{background:linear-gradient(90deg,#5da9e9,#edf2f5,#f47a20)}
+.export-button{border:1px solid #c9d3da;color:var(--metal-dark);background:#fff}
+.summary strong,.section h2,.hero h1,.slot-heading strong,.map-header strong,.important strong,.insight h3{color:var(--text)}
+.surface-controls{background:#f8fbfd;border-color:var(--stroke)}
+.z-control label,.switch-label{color:var(--text)}
+.z-control output{color:var(--accent)}
+.z-control input{accent-color:var(--accent)}
+.switch-label input{accent-color:var(--accent)}
+.surface-legend i.point-a{background:#5da9e9}.surface-legend i.point-b{background:#f47a20}
+.shape-note{border-left-color:#f2a15f;background:#fffaf5}
+.coverage-box canvas{border-color:#d6e0e7}
+.steps>div{border-color:#d8e1e8}
+footer span:first-child{color:var(--metal-dark)}
+button:focus-visible,select:focus-visible,.input-panel:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* v1.2.3 instruction visuals and note emphasis */
+.selection-help{display:block;margin-top:8px;color:var(--text-secondary);font-size:11px;line-height:1.45;max-width:320px}
+.howto-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px;margin-bottom:22px}
+.howto-card{background:var(--panel);border:1px solid var(--stroke);border-radius:14px;overflow:hidden;box-shadow:0 6px 24px rgba(31,42,51,.05)}
+.howto-photo{background:linear-gradient(180deg,#ffffff 0%,#f8fbfd 100%);padding:12px;border-bottom:1px solid var(--stroke)}
+.howto-photo svg{display:block;width:100%;height:auto;border-radius:10px}
+.howto-card h3{margin:14px 16px 8px;font-size:15px;color:var(--text)}
+.howto-card p{margin:0 16px 16px;color:var(--text-secondary);font-size:12px;line-height:1.7}
+.term-highlight{color:#8b3f08;font-weight:800;background:#ffe6d1;padding:1px 6px;border-radius:6px}
+.term-highlight.soft{color:#69448d;background:#f1e7ff}
+@media(max-width:900px){.howto-grid{grid-template-columns:1fr}}
+
+/* v1.2.4 layout repair: snapshot picker and helper must not share one flex row. */
+.selection{display:grid;grid-template-columns:minmax(0,1fr) minmax(165px,1.1fr);align-items:center;gap:7px 14px}
+.selection>label{grid-column:1;grid-row:1;min-width:0}
+.selection>select{grid-column:2;grid-row:1;min-width:0;max-width:100%;width:100%;justify-self:stretch}
+.selection>.selection-help{grid-column:1/-1;grid-row:2;display:block;margin:2px 0 0;max-width:unset;color:#5f6e7a;font-size:11px;line-height:1.5}
+.howto-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.howto-card{min-width:0}
+.howto-photo{overflow:hidden}
+.howto-photo svg{max-width:100%;height:auto;display:block}
+.howto-card p{overflow-wrap:anywhere}
+@media(max-width:900px){.howto-grid{grid-template-columns:1fr}}
+@media(max-width:580px){
+  .selection{grid-template-columns:minmax(0,1fr);gap:9px}
+  .selection>label,.selection>select,.selection>.selection-help{grid-column:1;grid-row:auto}
+  .selection>select{min-width:0;max-width:100%;width:100%}
+}
+
+/* Small contrast and instruction typography corrections */
+.status.success{color:#247b65}
+.status.error{color:#b84636}
+.steps p strong{display:inline;font-size:12px;color:#364957;font-weight:750}
+.steps span{color:#2774ad}
+.howto-photo svg text{paint-order:stroke fill}
+.term-highlight{white-space:nowrap}
+
+
+.runtime-notice{background:#fff3e8;color:#89420b;border:1px solid #f9c48c;padding:12px 16px;border-radius:10px;margin:14px 0;font-size:13px;line-height:1.6}
+.runtime-notice[hidden]{display:none}
+
+
+.switch-label.compact{display:inline-flex;align-items:center;gap:8px;margin-left:10px;padding:8px 12px;border:1px solid var(--stroke);border-radius:999px;background:#fff;white-space:nowrap;font-size:12px}.switch-label.compact input{margin:0}
+
+</style>
+  
+  
+  
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">∿</span><span>KOBRA<span class="brand-sub"> / MESH LAB</span></span></div>
+      <div class="top-right"><span class="live-dot"></span> 100% browser-side <span class="header-rule">·</span> No upload · No account</div>
+    </header>
+
+    <main>
+      <div id="runtimeNotice" class="runtime-notice" role="status">Interactive scripts have not started. If you are viewing this inside a file preview, download the standalone HTML and open it in Chrome/Edge, or publish the GitHub Pages version. Previews may disable JavaScript.</div>
+      <section class="hero">
+        <div class="eyebrow">ANYCUBIC KOBRA X · COMMUNITY TOOL</div>
+        <div class="hero-line"><h1>Make your bed mesh<br><em>visible.</em></h1><div class="hero-aside">Turn encrypted Anycubic diagnostic logs into readable height maps. Compare two calibrations, see what changed, and export your measurements.</div></div>
+        <div class="hero-bottom"><span class="pill"><i></i> Runs completely offline</span><span>Supports encrypted <code>AC_LOG*.pack</code> and extracted <code>.csv</code></span></div>
+      </section>
+
+      <section class="section import-section">
+        <div class="section-heading"><div><div class="kicker">01 / INPUTS</div><h2>Load calibration data</h2></div><button id="demoBtn" class="ghost-button">Try a simulated demo <span aria-hidden="true">↗</span></button></div>
+        <div class="upload-grid">
+          <div class="input-panel" id="dropA" tabindex="0" role="button" aria-label="Choose baseline diagnostic log"><div class="slot-heading"><span class="slot-symbol a">A</span><div><strong>Baseline</strong><small>Before adjustment</small></div><span class="slot-flag">DATASET A</span></div><div class="drop-content"><div class="file-icon">⇧</div><strong id="labelA">Drop your log here</strong><span>or click to browse · .pack / .csv</span><input type="file" id="fileA" accept=".pack,.zip,.csv" aria-label="Baseline file" hidden></div><div class="selection"><label for="meshA">Calibration snapshot</label><select id="meshA" disabled><option>Awaiting file</option></select><small class="selection-help">You can choose another recorded calibration from this dropdown after loading a file.</small></div></div>
+          <div class="input-panel" id="dropB" tabindex="0" role="button" aria-label="Choose comparison diagnostic log"><div class="slot-heading"><span class="slot-symbol b">B</span><div><strong>Comparison</strong><small>After adjustment</small></div><span class="slot-flag">DATASET B</span></div><div class="drop-content"><div class="file-icon">⇧</div><strong id="labelB">Drop your second log</strong><span>or click to browse · optional</span><input type="file" id="fileB" accept=".pack,.zip,.csv" aria-label="Comparison file" hidden></div><div class="selection"><label for="meshB">Calibration snapshot</label><select id="meshB" disabled><option>Awaiting file</option></select><small class="selection-help">You can choose another recorded calibration from this dropdown after loading a file.</small></div></div>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite">No files loaded. Your logs are processed on this device; nothing is transmitted.</p>
+      </section>
+
+      <section id="results" class="section results" hidden>
+        <div class="section-heading"><div><div class="kicker">02 / ANALYSIS</div><h2>Surface overview</h2></div><div class="toolbar"><label for="deltaMode">Difference display</label><select id="deltaMode"><option value="raw">Raw B − A</option><option value="centered">Remove mean shift</option><option value="detrended">Remove mean &amp; tilt</option></select><label class="switch-label compact"><input id="showPlate2D" type="checkbox" checked/> Show Build Plate</label></div></div>
+        <div class="summary-grid">
+          <div class="summary"><div class="summary-head"><span>A / BASELINE</span><span class="legend-dot legend-a"></span></div><strong id="rangeA">—</strong><small id="subA">Peak-to-peak measured range</small></div>
+          <div class="summary"><div class="summary-head"><span>B / COMPARISON</span><span class="legend-dot legend-b"></span></div><strong id="rangeB">—</strong><small id="subB">Load a second calibration</small></div>
+          <div class="summary"><div class="summary-head"><span>SHARED REGION / CHANGE</span><span class="legend-dot legend-d"></span></div><strong id="deltaMetric">—</strong><small id="subD">Difference over overlapping XY area</small></div>
+        </div>
+        <div id="compareWarning" class="notice" hidden></div>
+        <div class="map-grid">
+          <article class="map-card"><div class="map-header"><div><span class="tag tag-a">A</span><strong>Baseline surface</strong></div><span id="infoA" class="mini-info">—</span></div><div class="map-body"><canvas id="canvasA" width="560" height="480" aria-label="Baseline XY bed mesh heatmap"></canvas><div class="colorbar"><span id="scaleAmin">−</span><div class="gradient"></div><span id="scaleAmax">+</span></div></div><div class="map-footer" id="footerA">—</div></article>
+          <article class="map-card"><div class="map-header"><div><span class="tag tag-b">B</span><strong>Comparison surface</strong></div><span id="infoB" class="mini-info">—</span></div><div class="map-body"><canvas id="canvasB" width="560" height="480" aria-label="Comparison XY bed mesh heatmap"></canvas><div class="colorbar"><span id="scaleBmin">−</span><div class="gradient"></div><span id="scaleBmax">+</span></div></div><div class="map-footer" id="footerB">—</div></article>
+          <article class="map-card difference"><div class="map-header"><div><span class="tag tag-d">Δ</span><strong>Change map</strong></div><span id="infoD" class="mini-info">B − A</span></div><div class="map-body"><canvas id="canvasD" width="560" height="480" aria-label="Difference between meshes"></canvas><div class="colorbar"><span id="scaleDmin">−</span><div class="gradient"></div><span id="scaleDmax">+</span></div></div><div class="map-footer" id="footerD">Requires overlapping grids</div></article>
+        </div>
+        <div class="controls-end"><button id="downloadA" class="export-button">↓ Export A as CSV</button><button id="downloadAPng" class="export-button">↓ Export A PNG</button><button id="downloadB" class="export-button" disabled>↓ Export B as CSV</button><button id="downloadBPng" class="export-button" disabled>↓ Export B PNG</button><button id="downloadD" class="export-button" disabled>↓ Export difference CSV</button><button id="downloadPng" class="export-button" disabled>↓ Export difference PNG</button></div>
+        <div class="under-chart"><div><div class="kicker">03 / SHAPE</div><h2>Surface profile <span class="muted">/ interactive 3D surface</span></h2><p>Depth-tested surface in real XY coordinates. Drag to rotate, mouse wheel to zoom, Shift+drag to pan; double-click to reset. Vertical exaggeration affects only the picture.</p></div><select id="surfaceSelect"><option value="A">Baseline (A)</option><option value="B">Comparison (B)</option><option value="D">Difference (Δ)</option></select></div>
+        <div class="surface-controls" aria-label="3D view controls">
+          <div class="z-control"><label for="zScale">Vertical exaggeration <output id="zValue">Auto</output></label><input id="zScale" type="range" min="1" max="1000" value="150" step="1" aria-label="Real physical Z exaggeration multiplier"/><span class="range-ends"><span>1× (true proportions)</span><span>1000×</span></span></div>
+          <button id="autoZ" class="ghost-button small">Auto scale</button>
+          <button id="resetView" class="ghost-button small">Reset camera</button>
+          <label class="switch-label"><input id="showPoints" type="checkbox" checked/> Show measured points</label>
+          <label class="switch-label"><input id="showPlate3D" type="checkbox" checked/> Show Build Plate (3D)</label>
+          <label class="switch-label"><input id="coarseMesh" type="checkbox"/> Measured-cell resolution</label>
+          <label class="switch-label"><input id="maskEstimates" type="checkbox"/> Mask distant estimates</label>
+        </div>
+        <div class="surface-box"><canvas id="surfaceCanvas" width="1100" height="530" aria-label="Interactive 3D mesh with correct depth occlusion"></canvas><div class="surface-top-note" id="surfaceTopNote">—</div><div id="surfaceCaption" class="surface-label">—</div></div>
+        <div class="surface-legend"><span><i class="point-a"></i> Probe points A</span><span><i class="point-b"></i> Probe points B</span><span id="surfaceInfo">Difference points are projected onto the interpolated surface; they are not directly paired.</span></div>
+        <div id="coverageBox" class="coverage-box" hidden><div><strong>Adaptive probing coverage</strong><p id="coverageDescription">—</p></div><canvas id="coverageCanvas" width="340" height="190" aria-label="XY overlap region for baseline and comparison"></canvas></div>
+        <p class="shape-note">Difference (Δ) = B − A evaluated on the XY overlap only. Meshing uses bilinear estimates from two different adaptive grids. “Mask distant estimates” uses distance to nearby probes as a visual heuristic, not a quantified uncertainty bound. An unusually sharp ridge may be from sparse sampling, not physical deformation.</p>
+        <div id="tiltBox" class="insights"></div>
+      </section>
+
+      <section class="section notes-section"><div class="section-heading"><div><div class="kicker">04 / HOW IT WORKS</div><h2>From printer to insight</h2></div></div><div class="steps"><div><span>01</span><strong>Run full auto-leveling</strong><p>Install the PEI plate. On the printer touchscreen choose <strong>Control → Smart assist → Calibration → Auto levelling</strong>, tick the checkbox, then press <strong>Start</strong>. Wait until the calibration finishes before exporting.</p></div><div><span>02</span><strong>Export and preserve the log</strong><p>Once leveling has finished, insert a USB drive and choose <strong>Settings → General → Export Log</strong>. Copy <code>AC_LOG*.pack</code> to your computer. A new export can overwrite the previous file on USB; rename or archive each copy.</p></div><div><span>03</span><strong>Pick the calibration you want</strong><p>If bed calibration was run several times during the day, one exported log can contain multiple recorded meshes with their own timestamps. Use the <strong>Calibration snapshot</strong> dropdown to choose the exact dataset you want before comparing.</p></div></div><div class="howto-grid"><article class="howto-card"><div class="howto-photo" aria-hidden="true"><svg viewBox="0 0 320 180" role="img"><rect width="320" height="180" rx="18" fill="#f8fbfd"/><rect x="18" y="18" width="284" height="144" rx="14" fill="#ffffff" stroke="#d7e0e7"/><rect x="36" y="34" width="112" height="16" rx="8" fill="#f47a20" opacity=".18"/><rect x="36" y="62" width="248" height="72" rx="10" fill="#fff6ec" stroke="#ffd1a8"/><rect x="54" y="78" width="126" height="12" rx="6" fill="#5a6875" opacity=".85"/><rect x="54" y="98" width="168" height="10" rx="5" fill="#8a98a6" opacity=".65"/><rect x="196" y="76" width="68" height="40" rx="10" fill="#f47a20"/><text x="230" y="100" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#fff">Auto Level</text><text x="36" y="146" font-size="9" font-family="Arial, sans-serif" fill="#61707d">Control → Smart assist → Calibration</text><text x="36" y="158" font-size="9" font-family="Arial, sans-serif" fill="#61707d">→ Auto levelling → ✓ → Start</text></svg></div><h3>1. Run a full 49-point auto-level</h3><p>Install the PEI sheet, then open <strong>Control → Smart assist → Calibration → Auto levelling</strong>. Tick the checkbox and press <strong>Start</strong>; wait until all 49 probing points are finished. Do not touch the hot bed or moving toolhead.</p></article><article class="howto-card"><div class="howto-photo" aria-hidden="true"><svg viewBox="0 0 320 180" role="img"><rect width="320" height="180" rx="18" fill="#f8fbfd"/><rect x="20" y="22" width="120" height="136" rx="14" fill="#ffffff" stroke="#d7e0e7"/><rect x="50" y="42" width="60" height="80" rx="8" fill="#eef3f7" stroke="#b8c2cb"/><rect x="62" y="56" width="36" height="6" rx="3" fill="#f47a20"/><rect x="62" y="69" width="36" height="6" rx="3" fill="#8a98a6"/><rect x="62" y="82" width="36" height="6" rx="3" fill="#8a98a6"/><text x="80" y="140" text-anchor="middle" font-size="12" font-family="Arial, sans-serif" fill="#61707d">USB stick</text><rect x="164" y="36" width="124" height="104" rx="14" fill="#ffffff" stroke="#d7e0e7"/><rect x="182" y="54" width="88" height="18" rx="6" fill="#eef3f7"/><text x="226" y="67" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#3a4652">AC_LOG.pack</text><rect x="182" y="84" width="72" height="14" rx="7" fill="#fff0e4"/><text x="218" y="95" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#a65014">copy to PC</text></svg></div><h3>2. Export to USB and save a copy</h3><p>Insert USB after leveling, choose <strong>Settings → General → Export Log</strong>, and copy the <code>.pack</code> to your PC. A later export can overwrite the USB file, so rename each saved copy.</p></article><article class="howto-card"><div class="howto-photo" aria-hidden="true"><svg viewBox="0 0 320 180" role="img"><rect width="320" height="180" rx="18" fill="#f8fbfd"/><rect x="18" y="18" width="284" height="144" rx="14" fill="#ffffff" stroke="#d7e0e7"/><rect x="34" y="34" width="116" height="70" rx="12" fill="#fbfdff" stroke="#d7e0e7"/><rect x="48" y="52" width="86" height="10" rx="5" fill="#8a98a6" opacity=".65"/><rect x="48" y="70" width="72" height="10" rx="5" fill="#f47a20" opacity=".85"/><rect x="174" y="40" width="108" height="40" rx="10" fill="#ffffff" stroke="#f47a20" stroke-width="2"/><text x="228" y="63" text-anchor="middle" font-size="11" font-family="Arial, sans-serif" fill="#1f2a33">5 × 7 mesh</text><path d="M266 58 l8 0 l-4 6z" fill="#5a6875"/><rect x="174" y="82" width="108" height="28" rx="0" fill="#beddff" opacity=".9"/><text x="228" y="100" text-anchor="middle" font-size="10" font-family="Arial, sans-serif" fill="#284965">choose another</text><text x="34" y="140" font-size="11" font-family="Arial, sans-serif" fill="#61707d">Select a saved calibration</text></svg></div><h3>3. Choose another timestamp if needed</h3><p>Some logs contain multiple recorded meshes from different calibration runs on the same day. Use the dropdown to switch to another calibration snapshot and timestamp.</p></article></div><div class="important"><strong>Measurement notes</strong><p>Values are firmware-reported relative Z heights / compensation values (mm), not absolute nozzle-to-bed clearances. If you want the freshest result, run auto-calibration immediately before exporting the log. A raw difference includes reference/Z-zero shifts and may not mean the physical bed changed. <span class="term-highlight">“Remove mean shift”</span> compares spatial variation; <span class="term-highlight soft">“Remove mean &amp; tilt”</span> isolates local shape changes. Use identical bed temperatures and repeat probing for reliable comparisons. XY orientation follows the coordinates recorded in the log; verify physical corner orientation before mechanical adjustments. Not affiliated with Anycubic.</p></div></section>
+    </main>
+    <footer><span>∿ &nbsp; KOBRA MESH LAB</span><span>Open locally or host as static files. No telemetry, cookies or remote scripts.</span><span>Community tool · v1.2.14</span></footer>
+  </div>
+  <script>
+/* pako 0.2.9 nodeca/pako */
+!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var t;t="undefined"!=typeof window?window:"undefined"!=typeof global?global:"undefined"!=typeof self?self:this,t.pako=e()}}(function(){return function e(t,i,n){function a(o,s){if(!i[o]){if(!t[o]){var f="function"==typeof require&&require;if(!s&&f)return f(o,!0);if(r)return r(o,!0);var l=new Error("Cannot find module '"+o+"'");throw l.code="MODULE_NOT_FOUND",l}var d=i[o]={exports:{}};t[o][0].call(d.exports,function(e){var i=t[o][1][e];return a(i?i:e)},d,d.exports,e,t,i,n)}return i[o].exports}for(var r="function"==typeof require&&require,o=0;o<n.length;o++)a(n[o]);return a}({1:[function(e,t,i){"use strict";var n="undefined"!=typeof Uint8Array&&"undefined"!=typeof Uint16Array&&"undefined"!=typeof Int32Array;i.assign=function(e){for(var t=Array.prototype.slice.call(arguments,1);t.length;){var i=t.shift();if(i){if("object"!=typeof i)throw new TypeError(i+"must be non-object");for(var n in i)i.hasOwnProperty(n)&&(e[n]=i[n])}}return e},i.shrinkBuf=function(e,t){return e.length===t?e:e.subarray?e.subarray(0,t):(e.length=t,e)};var a={arraySet:function(e,t,i,n,a){if(t.subarray&&e.subarray)return void e.set(t.subarray(i,i+n),a);for(var r=0;r<n;r++)e[a+r]=t[i+r]},flattenChunks:function(e){var t,i,n,a,r,o;for(n=0,t=0,i=e.length;t<i;t++)n+=e[t].length;for(o=new Uint8Array(n),a=0,t=0,i=e.length;t<i;t++)r=e[t],o.set(r,a),a+=r.length;return o}},r={arraySet:function(e,t,i,n,a){for(var r=0;r<n;r++)e[a+r]=t[i+r]},flattenChunks:function(e){return[].concat.apply([],e)}};i.setTyped=function(e){e?(i.Buf8=Uint8Array,i.Buf16=Uint16Array,i.Buf32=Int32Array,i.assign(i,a)):(i.Buf8=Array,i.Buf16=Array,i.Buf32=Array,i.assign(i,r))},i.setTyped(n)},{}],2:[function(e,t,i){"use strict";function n(e,t){if(t<65537&&(e.subarray&&o||!e.subarray&&r))return String.fromCharCode.apply(null,a.shrinkBuf(e,t));for(var i="",n=0;n<t;n++)i+=String.fromCharCode(e[n]);return i}var a=e("./common"),r=!0,o=!0;try{String.fromCharCode.apply(null,[0])}catch(e){r=!1}try{String.fromCharCode.apply(null,new Uint8Array(1))}catch(e){o=!1}for(var s=new a.Buf8(256),f=0;f<256;f++)s[f]=f>=252?6:f>=248?5:f>=240?4:f>=224?3:f>=192?2:1;s[254]=s[254]=1,i.string2buf=function(e){var t,i,n,r,o,s=e.length,f=0;for(r=0;r<s;r++)i=e.charCodeAt(r),55296===(64512&i)&&r+1<s&&(n=e.charCodeAt(r+1),56320===(64512&n)&&(i=65536+(i-55296<<10)+(n-56320),r++)),f+=i<128?1:i<2048?2:i<65536?3:4;for(t=new a.Buf8(f),o=0,r=0;o<f;r++)i=e.charCodeAt(r),55296===(64512&i)&&r+1<s&&(n=e.charCodeAt(r+1),56320===(64512&n)&&(i=65536+(i-55296<<10)+(n-56320),r++)),i<128?t[o++]=i:i<2048?(t[o++]=192|i>>>6,t[o++]=128|63&i):i<65536?(t[o++]=224|i>>>12,t[o++]=128|i>>>6&63,t[o++]=128|63&i):(t[o++]=240|i>>>18,t[o++]=128|i>>>12&63,t[o++]=128|i>>>6&63,t[o++]=128|63&i);return t},i.buf2binstring=function(e){return n(e,e.length)},i.binstring2buf=function(e){for(var t=new a.Buf8(e.length),i=0,n=t.length;i<n;i++)t[i]=e.charCodeAt(i);return t},i.buf2string=function(e,t){var i,a,r,o,f=t||e.length,l=new Array(2*f);for(a=0,i=0;i<f;)if(r=e[i++],r<128)l[a++]=r;else if(o=s[r],o>4)l[a++]=65533,i+=o-1;else{for(r&=2===o?31:3===o?15:7;o>1&&i<f;)r=r<<6|63&e[i++],o--;o>1?l[a++]=65533:r<65536?l[a++]=r:(r-=65536,l[a++]=55296|r>>10&1023,l[a++]=56320|1023&r)}return n(l,a)},i.utf8border=function(e,t){var i;for(t=t||e.length,t>e.length&&(t=e.length),i=t-1;i>=0&&128===(192&e[i]);)i--;return i<0?t:0===i?t:i+s[e[i]]>t?i:t}},{"./common":1}],3:[function(e,t,i){"use strict";function n(e,t,i,n){for(var a=65535&e|0,r=e>>>16&65535|0,o=0;0!==i;){o=i>2e3?2e3:i,i-=o;do a=a+t[n++]|0,r=r+a|0;while(--o);a%=65521,r%=65521}return a|r<<16|0}t.exports=n},{}],4:[function(e,t,i){"use strict";t.exports={Z_NO_FLUSH:0,Z_PARTIAL_FLUSH:1,Z_SYNC_FLUSH:2,Z_FULL_FLUSH:3,Z_FINISH:4,Z_BLOCK:5,Z_TREES:6,Z_OK:0,Z_STREAM_END:1,Z_NEED_DICT:2,Z_ERRNO:-1,Z_STREAM_ERROR:-2,Z_DATA_ERROR:-3,Z_BUF_ERROR:-5,Z_NO_COMPRESSION:0,Z_BEST_SPEED:1,Z_BEST_COMPRESSION:9,Z_DEFAULT_COMPRESSION:-1,Z_FILTERED:1,Z_HUFFMAN_ONLY:2,Z_RLE:3,Z_FIXED:4,Z_DEFAULT_STRATEGY:0,Z_BINARY:0,Z_TEXT:1,Z_UNKNOWN:2,Z_DEFLATED:8}},{}],5:[function(e,t,i){"use strict";function n(){for(var e,t=[],i=0;i<256;i++){e=i;for(var n=0;n<8;n++)e=1&e?3988292384^e>>>1:e>>>1;t[i]=e}return t}function a(e,t,i,n){var a=r,o=n+i;e^=-1;for(var s=n;s<o;s++)e=e>>>8^a[255&(e^t[s])];return e^-1}var r=n();t.exports=a},{}],6:[function(e,t,i){"use strict";function n(){this.text=0,this.time=0,this.xflags=0,this.os=0,this.extra=null,this.extra_len=0,this.name="",this.comment="",this.hcrc=0,this.done=!1}t.exports=n},{}],7:[function(e,t,i){"use strict";var n=30,a=12;t.exports=function(e,t){var i,r,o,s,f,l,d,u,c,h,b,w,m,k,_,g,v,p,x,y,S,E,B,Z,A;i=e.state,r=e.next_in,Z=e.input,o=r+(e.avail_in-5),s=e.next_out,A=e.output,f=s-(t-e.avail_out),l=s+(e.avail_out-257),d=i.dmax,u=i.wsize,c=i.whave,h=i.wnext,b=i.window,w=i.hold,m=i.bits,k=i.lencode,_=i.distcode,g=(1<<i.lenbits)-1,v=(1<<i.distbits)-1;e:do{m<15&&(w+=Z[r++]<<m,m+=8,w+=Z[r++]<<m,m+=8),p=k[w&g];t:for(;;){if(x=p>>>24,w>>>=x,m-=x,x=p>>>16&255,0===x)A[s++]=65535&p;else{if(!(16&x)){if(0===(64&x)){p=k[(65535&p)+(w&(1<<x)-1)];continue t}if(32&x){i.mode=a;break e}e.msg="invalid literal/length code",i.mode=n;break e}y=65535&p,x&=15,x&&(m<x&&(w+=Z[r++]<<m,m+=8),y+=w&(1<<x)-1,w>>>=x,m-=x),m<15&&(w+=Z[r++]<<m,m+=8,w+=Z[r++]<<m,m+=8),p=_[w&v];i:for(;;){if(x=p>>>24,w>>>=x,m-=x,x=p>>>16&255,!(16&x)){if(0===(64&x)){p=_[(65535&p)+(w&(1<<x)-1)];continue i}e.msg="invalid distance code",i.mode=n;break e}if(S=65535&p,x&=15,m<x&&(w+=Z[r++]<<m,m+=8,m<x&&(w+=Z[r++]<<m,m+=8)),S+=w&(1<<x)-1,S>d){e.msg="invalid distance too far back",i.mode=n;break e}if(w>>>=x,m-=x,x=s-f,S>x){if(x=S-x,x>c&&i.sane){e.msg="invalid distance too far back",i.mode=n;break e}if(E=0,B=b,0===h){if(E+=u-x,x<y){y-=x;do A[s++]=b[E++];while(--x);E=s-S,B=A}}else if(h<x){if(E+=u+h-x,x-=h,x<y){y-=x;do A[s++]=b[E++];while(--x);if(E=0,h<y){x=h,y-=x;do A[s++]=b[E++];while(--x);E=s-S,B=A}}}else if(E+=h-x,x<y){y-=x;do A[s++]=b[E++];while(--x);E=s-S,B=A}for(;y>2;)A[s++]=B[E++],A[s++]=B[E++],A[s++]=B[E++],y-=3;y&&(A[s++]=B[E++],y>1&&(A[s++]=B[E++]))}else{E=s-S;do A[s++]=A[E++],A[s++]=A[E++],A[s++]=A[E++],y-=3;while(y>2);y&&(A[s++]=A[E++],y>1&&(A[s++]=A[E++]))}break}}break}}while(r<o&&s<l);y=m>>3,r-=y,m-=y<<3,w&=(1<<m)-1,e.next_in=r,e.next_out=s,e.avail_in=r<o?5+(o-r):5-(r-o),e.avail_out=s<l?257+(l-s):257-(s-l),i.hold=w,i.bits=m}},{}],8:[function(e,t,i){"use strict";function n(e){return(e>>>24&255)+(e>>>8&65280)+((65280&e)<<8)+((255&e)<<24)}function a(){this.mode=0,this.last=!1,this.wrap=0,this.havedict=!1,this.flags=0,this.dmax=0,this.check=0,this.total=0,this.head=null,this.wbits=0,this.wsize=0,this.whave=0,this.wnext=0,this.window=null,this.hold=0,this.bits=0,this.length=0,this.offset=0,this.extra=0,this.lencode=null,this.distcode=null,this.lenbits=0,this.distbits=0,this.ncode=0,this.nlen=0,this.ndist=0,this.have=0,this.next=null,this.lens=new _.Buf16(320),this.work=new _.Buf16(288),this.lendyn=null,this.distdyn=null,this.sane=0,this.back=0,this.was=0}function r(e){var t;return e&&e.state?(t=e.state,e.total_in=e.total_out=t.total=0,e.msg="",t.wrap&&(e.adler=1&t.wrap),t.mode=D,t.last=0,t.havedict=0,t.dmax=32768,t.head=null,t.hold=0,t.bits=0,t.lencode=t.lendyn=new _.Buf32(we),t.distcode=t.distdyn=new _.Buf32(me),t.sane=1,t.back=-1,z):C}function o(e){var t;return e&&e.state?(t=e.state,t.wsize=0,t.whave=0,t.wnext=0,r(e)):C}function s(e,t){var i,n;return e&&e.state?(n=e.state,t<0?(i=0,t=-t):(i=(t>>4)+1,t<48&&(t&=15)),t&&(t<8||t>15)?C:(null!==n.window&&n.wbits!==t&&(n.window=null),n.wrap=i,n.wbits=t,o(e))):C}function f(e,t){var i,n;return e?(n=new a,e.state=n,n.window=null,i=s(e,t),i!==z&&(e.state=null),i):C}function l(e){return f(e,_e)}function d(e){if(ge){var t;for(m=new _.Buf32(512),k=new _.Buf32(32),t=0;t<144;)e.lens[t++]=8;for(;t<256;)e.lens[t++]=9;for(;t<280;)e.lens[t++]=7;for(;t<288;)e.lens[t++]=8;for(x(S,e.lens,0,288,m,0,e.work,{bits:9}),t=0;t<32;)e.lens[t++]=5;x(E,e.lens,0,32,k,0,e.work,{bits:5}),ge=!1}e.lencode=m,e.lenbits=9,e.distcode=k,e.distbits=5}function u(e,t,i,n){var a,r=e.state;return null===r.window&&(r.wsize=1<<r.wbits,r.wnext=0,r.whave=0,r.window=new _.Buf8(r.wsize)),n>=r.wsize?(_.arraySet(r.window,t,i-r.wsize,r.wsize,0),r.wnext=0,r.whave=r.wsize):(a=r.wsize-r.wnext,a>n&&(a=n),_.arraySet(r.window,t,i-n,a,r.wnext),n-=a,n?(_.arraySet(r.window,t,i-n,n,0),r.wnext=n,r.whave=r.wsize):(r.wnext+=a,r.wnext===r.wsize&&(r.wnext=0),r.whave<r.wsize&&(r.whave+=a))),0}function c(e,t){var i,a,r,o,s,f,l,c,h,b,w,m,k,we,me,ke,_e,ge,ve,pe,xe,ye,Se,Ee,Be=0,Ze=new _.Buf8(4),Ae=[16,17,18,0,8,7,9,6,10,5,11,4,12,3,13,2,14,1,15];if(!e||!e.state||!e.output||!e.input&&0!==e.avail_in)return C;i=e.state,i.mode===X&&(i.mode=W),s=e.next_out,r=e.output,l=e.avail_out,o=e.next_in,a=e.input,f=e.avail_in,c=i.hold,h=i.bits,b=f,w=l,ye=z;e:for(;;)switch(i.mode){case D:if(0===i.wrap){i.mode=W;break}for(;h<16;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(2&i.wrap&&35615===c){i.check=0,Ze[0]=255&c,Ze[1]=c>>>8&255,i.check=v(i.check,Ze,2,0),c=0,h=0,i.mode=F;break}if(i.flags=0,i.head&&(i.head.done=!1),!(1&i.wrap)||(((255&c)<<8)+(c>>8))%31){e.msg="incorrect header check",i.mode=ce;break}if((15&c)!==U){e.msg="unknown compression method",i.mode=ce;break}if(c>>>=4,h-=4,xe=(15&c)+8,0===i.wbits)i.wbits=xe;else if(xe>i.wbits){e.msg="invalid window size",i.mode=ce;break}i.dmax=1<<xe,e.adler=i.check=1,i.mode=512&c?q:X,c=0,h=0;break;case F:for(;h<16;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(i.flags=c,(255&i.flags)!==U){e.msg="unknown compression method",i.mode=ce;break}if(57344&i.flags){e.msg="unknown header flags set",i.mode=ce;break}i.head&&(i.head.text=c>>8&1),512&i.flags&&(Ze[0]=255&c,Ze[1]=c>>>8&255,i.check=v(i.check,Ze,2,0)),c=0,h=0,i.mode=L;case L:for(;h<32;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.head&&(i.head.time=c),512&i.flags&&(Ze[0]=255&c,Ze[1]=c>>>8&255,Ze[2]=c>>>16&255,Ze[3]=c>>>24&255,i.check=v(i.check,Ze,4,0)),c=0,h=0,i.mode=H;case H:for(;h<16;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.head&&(i.head.xflags=255&c,i.head.os=c>>8),512&i.flags&&(Ze[0]=255&c,Ze[1]=c>>>8&255,i.check=v(i.check,Ze,2,0)),c=0,h=0,i.mode=M;case M:if(1024&i.flags){for(;h<16;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.length=c,i.head&&(i.head.extra_len=c),512&i.flags&&(Ze[0]=255&c,Ze[1]=c>>>8&255,i.check=v(i.check,Ze,2,0)),c=0,h=0}else i.head&&(i.head.extra=null);i.mode=j;case j:if(1024&i.flags&&(m=i.length,m>f&&(m=f),m&&(i.head&&(xe=i.head.extra_len-i.length,i.head.extra||(i.head.extra=new Array(i.head.extra_len)),_.arraySet(i.head.extra,a,o,m,xe)),512&i.flags&&(i.check=v(i.check,a,m,o)),f-=m,o+=m,i.length-=m),i.length))break e;i.length=0,i.mode=K;case K:if(2048&i.flags){if(0===f)break e;m=0;do xe=a[o+m++],i.head&&xe&&i.length<65536&&(i.head.name+=String.fromCharCode(xe));while(xe&&m<f);if(512&i.flags&&(i.check=v(i.check,a,m,o)),f-=m,o+=m,xe)break e}else i.head&&(i.head.name=null);i.length=0,i.mode=P;case P:if(4096&i.flags){if(0===f)break e;m=0;do xe=a[o+m++],i.head&&xe&&i.length<65536&&(i.head.comment+=String.fromCharCode(xe));while(xe&&m<f);if(512&i.flags&&(i.check=v(i.check,a,m,o)),f-=m,o+=m,xe)break e}else i.head&&(i.head.comment=null);i.mode=Y;case Y:if(512&i.flags){for(;h<16;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(c!==(65535&i.check)){e.msg="header crc mismatch",i.mode=ce;break}c=0,h=0}i.head&&(i.head.hcrc=i.flags>>9&1,i.head.done=!0),e.adler=i.check=0,i.mode=X;break;case q:for(;h<32;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}e.adler=i.check=n(c),c=0,h=0,i.mode=G;case G:if(0===i.havedict)return e.next_out=s,e.avail_out=l,e.next_in=o,e.avail_in=f,i.hold=c,i.bits=h,N;e.adler=i.check=1,i.mode=X;case X:if(t===Z||t===A)break e;case W:if(i.last){c>>>=7&h,h-=7&h,i.mode=le;break}for(;h<3;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}switch(i.last=1&c,c>>>=1,h-=1,3&c){case 0:i.mode=J;break;case 1:if(d(i),i.mode=ie,t===A){c>>>=2,h-=2;break e}break;case 2:i.mode=$;break;case 3:e.msg="invalid block type",i.mode=ce}c>>>=2,h-=2;break;case J:for(c>>>=7&h,h-=7&h;h<32;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if((65535&c)!==(c>>>16^65535)){e.msg="invalid stored block lengths",i.mode=ce;break}if(i.length=65535&c,c=0,h=0,i.mode=Q,t===A)break e;case Q:i.mode=V;case V:if(m=i.length){if(m>f&&(m=f),m>l&&(m=l),0===m)break e;_.arraySet(r,a,o,m,s),f-=m,o+=m,l-=m,s+=m,i.length-=m;break}i.mode=X;break;case $:for(;h<14;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(i.nlen=(31&c)+257,c>>>=5,h-=5,i.ndist=(31&c)+1,c>>>=5,h-=5,i.ncode=(15&c)+4,c>>>=4,h-=4,i.nlen>286||i.ndist>30){e.msg="too many length or distance symbols",i.mode=ce;break}i.have=0,i.mode=ee;case ee:for(;i.have<i.ncode;){for(;h<3;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.lens[Ae[i.have++]]=7&c,c>>>=3,h-=3}for(;i.have<19;)i.lens[Ae[i.have++]]=0;if(i.lencode=i.lendyn,i.lenbits=7,Se={bits:i.lenbits},ye=x(y,i.lens,0,19,i.lencode,0,i.work,Se),i.lenbits=Se.bits,ye){e.msg="invalid code lengths set",i.mode=ce;break}i.have=0,i.mode=te;case te:for(;i.have<i.nlen+i.ndist;){for(;Be=i.lencode[c&(1<<i.lenbits)-1],me=Be>>>24,ke=Be>>>16&255,_e=65535&Be,!(me<=h);){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(_e<16)c>>>=me,h-=me,i.lens[i.have++]=_e;else{if(16===_e){for(Ee=me+2;h<Ee;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(c>>>=me,h-=me,0===i.have){e.msg="invalid bit length repeat",i.mode=ce;break}xe=i.lens[i.have-1],m=3+(3&c),c>>>=2,h-=2}else if(17===_e){for(Ee=me+3;h<Ee;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}c>>>=me,h-=me,xe=0,m=3+(7&c),c>>>=3,h-=3}else{for(Ee=me+7;h<Ee;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}c>>>=me,h-=me,xe=0,m=11+(127&c),c>>>=7,h-=7}if(i.have+m>i.nlen+i.ndist){e.msg="invalid bit length repeat",i.mode=ce;break}for(;m--;)i.lens[i.have++]=xe}}if(i.mode===ce)break;if(0===i.lens[256]){e.msg="invalid code -- missing end-of-block",i.mode=ce;break}if(i.lenbits=9,Se={bits:i.lenbits},ye=x(S,i.lens,0,i.nlen,i.lencode,0,i.work,Se),i.lenbits=Se.bits,ye){e.msg="invalid literal/lengths set",i.mode=ce;break}if(i.distbits=6,i.distcode=i.distdyn,Se={bits:i.distbits},ye=x(E,i.lens,i.nlen,i.ndist,i.distcode,0,i.work,Se),i.distbits=Se.bits,ye){e.msg="invalid distances set",i.mode=ce;break}if(i.mode=ie,t===A)break e;case ie:i.mode=ne;case ne:if(f>=6&&l>=258){e.next_out=s,e.avail_out=l,e.next_in=o,e.avail_in=f,i.hold=c,i.bits=h,p(e,w),s=e.next_out,r=e.output,l=e.avail_out,o=e.next_in,a=e.input,f=e.avail_in,c=i.hold,h=i.bits,i.mode===X&&(i.back=-1);break}for(i.back=0;Be=i.lencode[c&(1<<i.lenbits)-1],me=Be>>>24,ke=Be>>>16&255,_e=65535&Be,!(me<=h);){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(ke&&0===(240&ke)){for(ge=me,ve=ke,pe=_e;Be=i.lencode[pe+((c&(1<<ge+ve)-1)>>ge)],me=Be>>>24,ke=Be>>>16&255,_e=65535&Be,!(ge+me<=h);){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}c>>>=ge,h-=ge,i.back+=ge}if(c>>>=me,h-=me,i.back+=me,i.length=_e,0===ke){i.mode=fe;break}if(32&ke){i.back=-1,i.mode=X;break}if(64&ke){e.msg="invalid literal/length code",i.mode=ce;break}i.extra=15&ke,i.mode=ae;case ae:if(i.extra){for(Ee=i.extra;h<Ee;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.length+=c&(1<<i.extra)-1,c>>>=i.extra,h-=i.extra,i.back+=i.extra}i.was=i.length,i.mode=re;case re:for(;Be=i.distcode[c&(1<<i.distbits)-1],me=Be>>>24,ke=Be>>>16&255,_e=65535&Be,!(me<=h);){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(0===(240&ke)){for(ge=me,ve=ke,pe=_e;Be=i.distcode[pe+((c&(1<<ge+ve)-1)>>ge)],me=Be>>>24,ke=Be>>>16&255,_e=65535&Be,!(ge+me<=h);){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}c>>>=ge,h-=ge,i.back+=ge}if(c>>>=me,h-=me,i.back+=me,64&ke){e.msg="invalid distance code",i.mode=ce;break}i.offset=_e,i.extra=15&ke,i.mode=oe;case oe:if(i.extra){for(Ee=i.extra;h<Ee;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}i.offset+=c&(1<<i.extra)-1,c>>>=i.extra,h-=i.extra,i.back+=i.extra}if(i.offset>i.dmax){e.msg="invalid distance too far back",i.mode=ce;break}i.mode=se;case se:if(0===l)break e;if(m=w-l,i.offset>m){if(m=i.offset-m,m>i.whave&&i.sane){e.msg="invalid distance too far back",i.mode=ce;break}m>i.wnext?(m-=i.wnext,k=i.wsize-m):k=i.wnext-m,m>i.length&&(m=i.length),we=i.window}else we=r,k=s-i.offset,m=i.length;m>l&&(m=l),l-=m,i.length-=m;do r[s++]=we[k++];while(--m);0===i.length&&(i.mode=ne);break;case fe:if(0===l)break e;r[s++]=i.length,l--,i.mode=ne;break;case le:if(i.wrap){for(;h<32;){if(0===f)break e;f--,c|=a[o++]<<h,h+=8}if(w-=l,e.total_out+=w,i.total+=w,w&&(e.adler=i.check=i.flags?v(i.check,r,w,s-w):g(i.check,r,w,s-w)),w=l,(i.flags?c:n(c))!==i.check){e.msg="incorrect data check",i.mode=ce;break}c=0,h=0}i.mode=de;case de:if(i.wrap&&i.flags){for(;h<32;){if(0===f)break e;f--,c+=a[o++]<<h,h+=8}if(c!==(4294967295&i.total)){e.msg="incorrect length check",i.mode=ce;break}c=0,h=0}i.mode=ue;case ue:ye=R;break e;case ce:ye=O;break e;case he:return I;case be:default:return C}return e.next_out=s,e.avail_out=l,e.next_in=o,e.avail_in=f,i.hold=c,i.bits=h,(i.wsize||w!==e.avail_out&&i.mode<ce&&(i.mode<le||t!==B))&&u(e,e.output,e.next_out,w-e.avail_out)?(i.mode=he,I):(b-=e.avail_in,w-=e.avail_out,e.total_in+=b,e.total_out+=w,i.total+=w,i.wrap&&w&&(e.adler=i.check=i.flags?v(i.check,r,w,e.next_out-w):g(i.check,r,w,e.next_out-w)),e.data_type=i.bits+(i.last?64:0)+(i.mode===X?128:0)+(i.mode===ie||i.mode===Q?256:0),(0===b&&0===w||t===B)&&ye===z&&(ye=T),ye)}function h(e){if(!e||!e.state)return C;var t=e.state;return t.window&&(t.window=null),e.state=null,z}function b(e,t){var i;return e&&e.state?(i=e.state,0===(2&i.wrap)?C:(i.head=t,t.done=!1,z)):C}function w(e,t){var i,n,a,r=t.length;return e&&e.state?(i=e.state,0!==i.wrap&&i.mode!==G?C:i.mode===G&&(n=1,n=g(n,t,r,0),n!==i.check)?O:(a=u(e,t,r,r))?(i.mode=he,I):(i.havedict=1,z)):C}var m,k,_=e("../utils/common"),g=e("./adler32"),v=e("./crc32"),p=e("./inffast"),x=e("./inftrees"),y=0,S=1,E=2,B=4,Z=5,A=6,z=0,R=1,N=2,C=-2,O=-3,I=-4,T=-5,U=8,D=1,F=2,L=3,H=4,M=5,j=6,K=7,P=8,Y=9,q=10,G=11,X=12,W=13,J=14,Q=15,V=16,$=17,ee=18,te=19,ie=20,ne=21,ae=22,re=23,oe=24,se=25,fe=26,le=27,de=28,ue=29,ce=30,he=31,be=32,we=852,me=592,ke=15,_e=ke,ge=!0;i.inflateReset=o,i.inflateReset2=s,i.inflateResetKeep=r,i.inflateInit=l,i.inflateInit2=f,i.inflate=c,i.inflateEnd=h,i.inflateGetHeader=b,i.inflateSetDictionary=w,i.inflateInfo="pako inflate (from Nodeca project)"},{"../utils/common":1,"./adler32":3,"./crc32":5,"./inffast":7,"./inftrees":9}],9:[function(e,t,i){"use strict";var n=e("../utils/common"),a=15,r=852,o=592,s=0,f=1,l=2,d=[3,4,5,6,7,8,9,10,11,13,15,17,19,23,27,31,35,43,51,59,67,83,99,115,131,163,195,227,258,0,0],u=[16,16,16,16,16,16,16,16,17,17,17,17,18,18,18,18,19,19,19,19,20,20,20,20,21,21,21,21,16,72,78],c=[1,2,3,4,5,7,9,13,17,25,33,49,65,97,129,193,257,385,513,769,1025,1537,2049,3073,4097,6145,8193,12289,16385,24577,0,0],h=[16,16,16,16,17,17,18,18,19,19,20,20,21,21,22,22,23,23,24,24,25,25,26,26,27,27,28,28,29,29,64,64];t.exports=function(e,t,i,b,w,m,k,_){var g,v,p,x,y,S,E,B,Z,A=_.bits,z=0,R=0,N=0,C=0,O=0,I=0,T=0,U=0,D=0,F=0,L=null,H=0,M=new n.Buf16(a+1),j=new n.Buf16(a+1),K=null,P=0;for(z=0;z<=a;z++)M[z]=0;for(R=0;R<b;R++)M[t[i+R]]++;for(O=A,C=a;C>=1&&0===M[C];C--);if(O>C&&(O=C),0===C)return w[m++]=20971520,w[m++]=20971520,_.bits=1,0;for(N=1;N<C&&0===M[N];N++);for(O<N&&(O=N),U=1,z=1;z<=a;z++)if(U<<=1,U-=M[z],U<0)return-1;if(U>0&&(e===s||1!==C))return-1;for(j[1]=0,z=1;z<a;z++)j[z+1]=j[z]+M[z];for(R=0;R<b;R++)0!==t[i+R]&&(k[j[t[i+R]]++]=R);if(e===s?(L=K=k,S=19):e===f?(L=d,H-=257,K=u,P-=257,S=256):(L=c,K=h,S=-1),F=0,R=0,z=N,y=m,I=O,T=0,p=-1,D=1<<O,x=D-1,e===f&&D>r||e===l&&D>o)return 1;for(var Y=0;;){Y++,E=z-T,k[R]<S?(B=0,Z=k[R]):k[R]>S?(B=K[P+k[R]],Z=L[H+k[R]]):(B=96,Z=0),g=1<<z-T,v=1<<I,N=v;do v-=g,w[y+(F>>T)+v]=E<<24|B<<16|Z|0;while(0!==v);for(g=1<<z-1;F&g;)g>>=1;if(0!==g?(F&=g-1,F+=g):F=0,R++,0===--M[z]){if(z===C)break;z=t[i+k[R]]}if(z>O&&(F&x)!==p){for(0===T&&(T=O),y+=N,I=z-T,U=1<<I;I+T<C&&(U-=M[I+T],!(U<=0));)I++,U<<=1;if(D+=1<<I,e===f&&D>r||e===l&&D>o)return 1;p=F&x,w[p]=O<<24|I<<16|y-m|0}}return 0!==F&&(w[y+F]=z-T<<24|64<<16|0),_.bits=O,0}},{"../utils/common":1}],10:[function(e,t,i){"use strict";t.exports={2:"need dictionary",1:"stream end",0:"","-1":"file error","-2":"stream error","-3":"data error","-4":"insufficient memory","-5":"buffer error","-6":"incompatible version"}},{}],11:[function(e,t,i){"use strict";function n(){this.input=null,this.next_in=0,this.avail_in=0,this.total_in=0,this.output=null,this.next_out=0,this.avail_out=0,this.total_out=0,this.msg="",this.state=null,this.data_type=2,this.adler=0}t.exports=n},{}],"/lib/inflate.js":[function(e,t,i){"use strict";function n(e){if(!(this instanceof n))return new n(e);this.options=s.assign({chunkSize:16384,windowBits:0,to:""},e||{});var t=this.options;t.raw&&t.windowBits>=0&&t.windowBits<16&&(t.windowBits=-t.windowBits,0===t.windowBits&&(t.windowBits=-15)),!(t.windowBits>=0&&t.windowBits<16)||e&&e.windowBits||(t.windowBits+=32),t.windowBits>15&&t.windowBits<48&&0===(15&t.windowBits)&&(t.windowBits|=15),this.err=0,this.msg="",this.ended=!1,this.chunks=[],this.strm=new u,this.strm.avail_out=0;var i=o.inflateInit2(this.strm,t.windowBits);if(i!==l.Z_OK)throw new Error(d[i]);this.header=new c,o.inflateGetHeader(this.strm,this.header)}function a(e,t){var i=new n(t);if(i.push(e,!0),i.err)throw i.msg;return i.result}function r(e,t){return t=t||{},t.raw=!0,a(e,t)}var o=e("./zlib/inflate"),s=e("./utils/common"),f=e("./utils/strings"),l=e("./zlib/constants"),d=e("./zlib/messages"),u=e("./zlib/zstream"),c=e("./zlib/gzheader"),h=Object.prototype.toString;n.prototype.push=function(e,t){var i,n,a,r,d,u,c=this.strm,b=this.options.chunkSize,w=this.options.dictionary,m=!1;if(this.ended)return!1;n=t===~~t?t:t===!0?l.Z_FINISH:l.Z_NO_FLUSH,"string"==typeof e?c.input=f.binstring2buf(e):"[object ArrayBuffer]"===h.call(e)?c.input=new Uint8Array(e):c.input=e,c.next_in=0,c.avail_in=c.input.length;do{if(0===c.avail_out&&(c.output=new s.Buf8(b),c.next_out=0,c.avail_out=b),i=o.inflate(c,l.Z_NO_FLUSH),i===l.Z_NEED_DICT&&w&&(u="string"==typeof w?f.string2buf(w):"[object ArrayBuffer]"===h.call(w)?new Uint8Array(w):w,i=o.inflateSetDictionary(this.strm,u)),i===l.Z_BUF_ERROR&&m===!0&&(i=l.Z_OK,m=!1),i!==l.Z_STREAM_END&&i!==l.Z_OK)return this.onEnd(i),this.ended=!0,!1;c.next_out&&(0!==c.avail_out&&i!==l.Z_STREAM_END&&(0!==c.avail_in||n!==l.Z_FINISH&&n!==l.Z_SYNC_FLUSH)||("string"===this.options.to?(a=f.utf8border(c.output,c.next_out),r=c.next_out-a,d=f.buf2string(c.output,a),c.next_out=r,c.avail_out=b-r,r&&s.arraySet(c.output,c.output,a,r,0),this.onData(d)):this.onData(s.shrinkBuf(c.output,c.next_out)))),0===c.avail_in&&0===c.avail_out&&(m=!0)}while((c.avail_in>0||0===c.avail_out)&&i!==l.Z_STREAM_END);return i===l.Z_STREAM_END&&(n=l.Z_FINISH),n===l.Z_FINISH?(i=o.inflateEnd(this.strm),this.onEnd(i),this.ended=!0,i===l.Z_OK):n!==l.Z_SYNC_FLUSH||(this.onEnd(l.Z_OK),c.avail_out=0,!0)},n.prototype.onData=function(e){this.chunks.push(e)},n.prototype.onEnd=function(e){e===l.Z_OK&&("string"===this.options.to?this.result=this.chunks.join(""):this.result=s.flattenChunks(this.chunks)),this.chunks=[],this.err=e,this.msg=this.strm.msg},i.Inflate=n,i.inflate=a,i.inflateRaw=r,i.ungzip=a},{"./utils/common":1,"./utils/strings":2,"./zlib/constants":4,"./zlib/gzheader":6,"./zlib/inflate":8,"./zlib/messages":10,"./zlib/zstream":11}]},{},[])("/lib/inflate.js")});
+
+
+</script>
+  <script>
+/* Generated by prepare_plate_asset.py from assets/pei-kobra-x.svg. Never fetches a URL. */
+'use strict';
+const KOBRA_PLATE = (() => {
+  const svgBounds={left:81.2,right:1172.3,top:67.3,bottom:1155.2,width:1254,height:1254};
+  const size=265;
+  const dx=svgBounds.right-svgBounds.left,dy=svgBounds.bottom-svgBounds.top;
+  const worldRect=[-svgBounds.left/dx*size,(svgBounds.bottom-svgBounds.height)/dy*size,
+     (svgBounds.width-svgBounds.left)/dx*size,svgBounds.bottom/dy*size];
+  const images={};let complete=0;
+  const source={base:"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB3aWR0aD0iMTI1NCIgaGVpZ2h0PSIxMjU0IiB2aWV3Qm94PSIwIDAgMTI1NCAxMjU0Ij4KPHRpdGxlPkRvdWJsZSBTaWRlZCBQRUkgU2hlZXQg4oCUIHRyYWNlZCByZWZlcmVuY2U8L3RpdGxlPgo8ZGVzYz5FZGl0YWJsZSB2ZWN0b3IgcmVjb25zdHJ1Y3Rpb24gb2YgdGhlIHN1cHBsaWVkIDEyNTQgw5cgMTI1NCByZWZlcmVuY2UuIFRyYW5zcGFyZW50IGV4dGVyaW9yOyBvbmUgY29udGludW91cyBwbGF0ZSBzaWxob3VldHRlIGluY2x1ZGluZyB0aGUgc2hhbGxvdyBsb3dlci1yaWdodCBleHRlbnNpb24uIEFsbCBhcnR3b3JrIGlzIFNWRyBwYXRocyBhbmQgZWRpdGFibGUgdGV4dC4gTm8gcmFzdGVyIGltYWdlcy48L2Rlc2M+CjxkZWZzPgogIDxwYXRoIGlkPSJwbGF0ZS1vdXRsaW5lIiBkPSJNIDEwNC4zLDY3LjMgSCAzODkuOCBRIDM5MS4zLDY3LjMgMzkyLjIsNjguOCBMIDQwMC44LDgzLjYgUSA0MDYuNiw5My41IDQxMi43LDgzLjcgTCA0MjIuMCw2OC4zIFEgNDIyLjYsNjcuMyA0MjQuMCw2Ny4zIEggODMwLjQgUSA4MzEuNiw2Ny4zIDgzMi41LDY4LjcgTCA4NDEuNiw4My43IFEgODQ3LjYsOTMuNCA4NTMuNiw4My44IEwgODYzLjAsNjguNCBRIDg2My43LDY3LjMgODY1LjAsNjcuMyBIIDExNDkuMiBDIDExNjEuOSw2Ny4zIDExNzIuMyw3Ny42IDExNzIuMyw5MC4zIFYgMTE2NC4wIEMgMTE3Mi4zLDExNzUuMyAxMTYzLjIsMTE4NC40IDExNTEuOSwxMTg0LjQgSCA2NzMuNiBRIDY2Ny42LDExODQuNCA2NjMuMywxMTgwLjEgTCA2NDIuMSwxMTU4LjggUSA2MzguNCwxMTU1LjIgNjMyLjgsMTE1NS4yIEggMTAyLjcgQyA5MC45LDExNTUuMiA4MS4yLDExNDUuNiA4MS4yLDExMzMuNyBWIDkwLjQgQyA4MS4yLDc3LjYgOTEuNSw2Ny4zIDEwNC4zLDY3LjMgWiIvPgogIDxjbGlwUGF0aCBpZD0icGxhdGUtY2xpcCI+PHVzZSBocmVmPSIjcGxhdGUtb3V0bGluZSIvPjwvY2xpcFBhdGg+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJzdXJmYWNlLXRvbmUiIHgxPSIwIiB5MT0iMCIgeDI9IjAuMTQiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzU0NTU1NSIvPgogICAgPHN0b3Agb2Zmc2V0PSIuMzIiIHN0b3AtY29sb3I9IiM0YjRjNGQiLz4KICAgIDxzdG9wIG9mZnNldD0iLjcwIiBzdG9wLWNvbG9yPSIjNDk0YTRiIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0YzRkNGUiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iZWRnZS1saWdodCIgY3g9Ii41IiBjeT0iLjUwIiByPSIuNjgiPgogICAgPHN0b3Agb2Zmc2V0PSIuNjciIHN0b3AtY29sb3I9IiNiN2I4YjciIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYjdiOGI3IiBzdG9wLW9wYWNpdHk9Ii4xMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHBhdHRlcm4gaWQ9InBlaS1ncmFpbiIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICA8cGF0aCBkPSJNLTEsMSBMMSwtMSBNMCw1IEw1LDAgTTQsNiBMNiw0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMmMyYmYiIHN0cm9rZS13aWR0aD0iLjQwIiBvcGFjaXR5PSIuMDIyIi8+CiAgICA8cGF0aCBkPSJNMCwwIEw1LDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzExMTMxNSIgc3Ryb2tlLXdpZHRoPSIuMzUiIG9wYWNpdHk9Ii4wMyIvPgogIDwvcGF0dGVybj4KPC9kZWZzPgo8ZyBpZD0icGxhdGUiIGFyaWEtbGFiZWw9IlNpbmdsZSBjb250aW51b3VzIFBFSSBwbGF0ZSI+CiAgPHVzZSBocmVmPSIjcGxhdGUtb3V0bGluZSIgZmlsbD0idXJsKCNzdXJmYWNlLXRvbmUpIi8+CiAgPGcgY2xpcC1wYXRoPSJ1cmwoI3BsYXRlLWNsaXApIj4KICAgIDxwYXRoIGQ9Ik03OSw2NSBIMTE3NSBWMTE4NyBINzkgWiIgZmlsbD0idXJsKCNlZGdlLWxpZ2h0KSIvPgogICAgPHBhdGggZD0iTTc5LDY1IEgxMTc1IFYxMTg3IEg3OSBaIiBmaWxsPSJ1cmwoI3BlaS1ncmFpbikiLz4KICAgIDx1c2UgaHJlZj0iI3BsYXRlLW91dGxpbmUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2QwZDBjYiIgc3Ryb2tlLW9wYWNpdHk9Ii4wMyIgc3Ryb2tlLXdpZHRoPSI4Ii8+CiAgPC9nPgogIDwvZz4KPC9zdmc+",marks:"data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB3aWR0aD0iMTI1NCIgaGVpZ2h0PSIxMjU0IiB2aWV3Qm94PSIwIDAgMTI1NCAxMjU0Ij4KPHRpdGxlPkRvdWJsZSBTaWRlZCBQRUkgU2hlZXQg4oCUIHRyYWNlZCByZWZlcmVuY2U8L3RpdGxlPgo8ZGVzYz5FZGl0YWJsZSB2ZWN0b3IgcmVjb25zdHJ1Y3Rpb24gb2YgdGhlIHN1cHBsaWVkIDEyNTQgw5cgMTI1NCByZWZlcmVuY2UuIFRyYW5zcGFyZW50IGV4dGVyaW9yOyBvbmUgY29udGludW91cyBwbGF0ZSBzaWxob3VldHRlIGluY2x1ZGluZyB0aGUgc2hhbGxvdyBsb3dlci1yaWdodCBleHRlbnNpb24uIEFsbCBhcnR3b3JrIGlzIFNWRyBwYXRocyBhbmQgZWRpdGFibGUgdGV4dC4gTm8gcmFzdGVyIGltYWdlcy48L2Rlc2M+CjxkZWZzPgogIDxwYXRoIGlkPSJwbGF0ZS1vdXRsaW5lIiBkPSJNIDEwNC4zLDY3LjMgSCAzODkuOCBRIDM5MS4zLDY3LjMgMzkyLjIsNjguOCBMIDQwMC44LDgzLjYgUSA0MDYuNiw5My41IDQxMi43LDgzLjcgTCA0MjIuMCw2OC4zIFEgNDIyLjYsNjcuMyA0MjQuMCw2Ny4zIEggODMwLjQgUSA4MzEuNiw2Ny4zIDgzMi41LDY4LjcgTCA4NDEuNiw4My43IFEgODQ3LjYsOTMuNCA4NTMuNiw4My44IEwgODYzLjAsNjguNCBRIDg2My43LDY3LjMgODY1LjAsNjcuMyBIIDExNDkuMiBDIDExNjEuOSw2Ny4zIDExNzIuMyw3Ny42IDExNzIuMyw5MC4zIFYgMTE2NC4wIEMgMTE3Mi4zLDExNzUuMyAxMTYzLjIsMTE4NC40IDExNTEuOSwxMTg0LjQgSCA2NzMuNiBRIDY2Ny42LDExODQuNCA2NjMuMywxMTgwLjEgTCA2NDIuMSwxMTU4LjggUSA2MzguNCwxMTU1LjIgNjMyLjgsMTE1NS4yIEggMTAyLjcgQyA5MC45LDExNTUuMiA4MS4yLDExNDUuNiA4MS4yLDExMzMuNyBWIDkwLjQgQyA4MS4yLDc3LjYgOTEuNSw2Ny4zIDEwNC4zLDY3LjMgWiIvPgogIDxjbGlwUGF0aCBpZD0icGxhdGUtY2xpcCI+PHVzZSBocmVmPSIjcGxhdGUtb3V0bGluZSIvPjwvY2xpcFBhdGg+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJzdXJmYWNlLXRvbmUiIHgxPSIwIiB5MT0iMCIgeDI9IjAuMTQiIHkyPSIxIj4KICAgIDxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzU0NTU1NSIvPgogICAgPHN0b3Agb2Zmc2V0PSIuMzIiIHN0b3AtY29sb3I9IiM0YjRjNGQiLz4KICAgIDxzdG9wIG9mZnNldD0iLjcwIiBzdG9wLWNvbG9yPSIjNDk0YTRiIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM0YzRkNGUiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyYWRpYWxHcmFkaWVudCBpZD0iZWRnZS1saWdodCIgY3g9Ii41IiBjeT0iLjUwIiByPSIuNjgiPgogICAgPHN0b3Agb2Zmc2V0PSIuNjciIHN0b3AtY29sb3I9IiNiN2I4YjciIHN0b3Atb3BhY2l0eT0iMCIvPgogICAgPHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYjdiOGI3IiBzdG9wLW9wYWNpdHk9Ii4xMCIvPgogIDwvcmFkaWFsR3JhZGllbnQ+CiAgPHBhdHRlcm4gaWQ9InBlaS1ncmFpbiIgd2lkdGg9IjUiIGhlaWdodD0iNSIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+CiAgICA8cGF0aCBkPSJNLTEsMSBMMSwtMSBNMCw1IEw1LDAgTTQsNiBMNiw0IiBmaWxsPSJub25lIiBzdHJva2U9IiNjMmMyYmYiIHN0cm9rZS13aWR0aD0iLjQwIiBvcGFjaXR5PSIuMDIyIi8+CiAgICA8cGF0aCBkPSJNMCwwIEw1LDUiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzExMTMxNSIgc3Ryb2tlLXdpZHRoPSIuMzUiIG9wYWNpdHk9Ii4wMyIvPgogIDwvcGF0dGVybj4KPC9kZWZzPgo8ZyBpZD0ibGVmdC1tYXJraW5nIiBmaWxsPSIjZmFmYWZhIj4KICA8cGF0aCBpZD0idXBwZXItcnVsZSIgZD0iTTExOC43NSw4My4wNSBIMTI1LjEwIFYzMjguNDUgSDExOC43NSBaIi8+CiAgPHRleHQgaWQ9InZlcnRpY2FsLWxhYmVsIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMTEuNiAzNDEuNikgcm90YXRlKDkwKSIgZm9udC1mYW1pbHk9IkJhaG5zY2hyaWZ0LCBESU4gQWx0ZXJuYXRlLCBBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIzMi41IiBmb250LXdlaWdodD0iNDAwIiB0ZXh0TGVuZ3RoPSIzMzkuNyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIj5Eb3VibGUgU2lkZWQgUEVJIFNoZWV0PC90ZXh0PgogIDxwYXRoIGlkPSJsb3dlci1ydWxlIiBkPSJNMTE4Ljc1LDY5My4yNSBIMTI1LjM1IFYxMTMzLjAgSDExOC43NSBaIi8+CjwvZz4KPGcgaWQ9ImFsaWdubWVudC10cmlhbmdsZXMiIGZpbGw9IiNmYmZiZmIiPgogIDxwYXRoIGlkPSJsZWZ0LXRvcC1hcnJvdyIgZD0iTTM4MS45LDc1LjQgTDM4OS4wLDg2LjcgSDM3NC44IFoiLz4KICA8cGF0aCBpZD0icmlnaHQtdG9wLWFycm93IiBkPSJNODcyLjIsNzUuNiBMODc5LjIsODYuOCBIODY1LjAgWiIvPgo8L2c+CjxnIGlkPSJsb3dlci1wcmludCIgZmlsbD0iI2ZhZmFmYSI+CiAgPHBhdGggaWQ9ImRvd24tdHJpYW5nbGUiIGQ9Ik02NDguMywxMTQyLjE1IEg3MDMuOCBRNzEwLjAsMTE0Mi4xNSA3MDYuNCwxMTQ2LjYgTDY3OS4yLDExNzMuOSBRNjc0LjUsMTE3OC41IDY3MC4wLDExNzMuOSBMNjQ1LjksMTE0OC4wIFE2NDEuOCwxMTQzLjQgNjQ4LjMsMTE0Mi4xNSBaIi8+CiAgPHBhdGggaWQ9InVwLXRyaWFuZ2xlIiBkPSJNNzA0LjAsMTE1Ny4yIFE3MDYuMSwxMTU0LjkgNzA4LjQsMTE1Ny4zIEw3MjUuNCwxMTczLjkgUTcyNy41LDExNzYuNiA3MjMuOSwxMTc2LjYgSDY4OC45IFE2ODUuMSwxMTc2LjYgNjg4LjAsMTE3My40IFoiLz4KICA8cGF0aCBpZD0ibWF0ZXJpYWwtc3RyaXAiIGQ9Ik03MjAuMSwxMTQxLjcgSDEwOTMuNiBRMTA5OS40LDExNDEuNyAxMDk5LjQsMTE0Ny41IFYxMTcxLjAgUTEwOTkuNCwxMTc2LjYgMTA5My43LDExNzYuNiBINzM2LjYgTDcxMC44LDExNTEuMSBaIi8+CiAgPHBhdGggaWQ9ImVuZC1ibG9jayIgZD0iTTExMTEuMSwxMTM5LjggSDExNTguOSBRMTE2NC4xLDExMzkuOCAxMTY0LjEsMTE0NS4yIFYxMTcxLjIgUTExNjQuMSwxMTc2LjQgMTE1OC44LDExNzYuNCBIMTExMS41IFExMTA2LjAsMTE3Ni40IDExMDYuMCwxMTcxLjAgVjExNDUuMCBRMTEwNi4wLDExMzkuOCAxMTExLjEsMTEzOS44IFoiLz4KICA8dGV4dCBpZD0ibWF0ZXJpYWwtbGFiZWwiIHg9Ijc1MC43IiB5PSIxMTY3LjU1IiBmaWxsPSIjNDE0MTQyIiBmb250LWZhbWlseT0iQmFobnNjaHJpZnQsIERJTiBBbHRlcm5hdGUsIEFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjIxIiB0ZXh0TGVuZ3RoPSIxNDYuNyIgbGVuZ3RoQWRqdXN0PSJzcGFjaW5nQW5kR2x5cGhzIj5QTEEvQUJTL1BFVEc8L3RleHQ+CjwvZz4KPGcgaWQ9ImhvdC1zdXJmYWNlLXdhcm5pbmciIGZpbGw9IiNmYWZhZmEiPgogIDxwYXRoIGlkPSJ3YXJuaW5nLWJvcmRlciIgZD0iTTExMzEuNSwxMDgwLjQgUTExMzUuMywxMDc0LjkgMTEzOS4xLDEwODAuNCBMMTE2NS43LDExMjAuNyBRMTE2OS42LDExMjcuMCAxMTYyLjAsMTEyNy4wIEgxMTA5LjAgUTExMDEuOSwxMTI3LjAgMTEwNS43LDExMjAuNyBaIiBmaWxsPSJub25lIiBzdHJva2U9IiNmYWZhZmEiIHN0cm9rZS13aWR0aD0iMS4wNSIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGlkPSJ3YXJuaW5nLWZpZWxkIiBkPSJNMTEzMi45LDEwODIuMyBRMTEzNS4yLDEwNzguNSAxMTM3LjYsMTA4Mi4zIEwxMTYyLjMsMTEyMC45IFExMTY1LjEsMTEyNC4xIDExNjAuNSwxMTI0LjEgSDExMTAuOCBRMTEwNi41LDExMjQuMSAxMTA5LjAsMTEyMC42IFoiLz4KICA8ZyBpZD0iaGVhdC1zdGVhbSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNGI0YzRkIiBzdHJva2Utd2lkdGg9IjMuMTUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+CiAgICA8cGF0aCBkPSJNMTEyOC4xLDEwOTcuNSBDMTEyMi40LDExMDMuMCAxMTIzLjAsMTEwNi4yIDExMjcuNywxMTEwLjAgQzExMzIuNiwxMTEzLjkgMTEyNy45LDExMTcuNCAxMTI1LjMsMTExOS4zIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwIC0yKSIvPgogICAgPHBhdGggZD0iTTExMzcuMCwxMDk3LjQgQzExMzEuMCwxMTAzLjAgMTEzMS40LDExMDYuMSAxMTM2LjEsMTEwOS45IEMxMTQwLjksMTExMy44IDExMzYuOSwxMTE3LjIgMTEzNC4wLDExMTkuMyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMCAtMikiLz4KICAgIDxwYXRoIGQ9Ik0xMTQ2LjAsMTA5OC4wIEMxMTQwLjIsMTEwMy4wIDExNDAuOCwxMTA2LjEgMTE0NS4wLDExMDkuOCBDMTE1MC4wLDExMTQuMCAxMTQ1LjUsMTExNy43IDExNDMuMywxMTE5LjMiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDAgLTIpIi8+CiAgICA8cGF0aCBkPSJNMTEyMS44LDExMjAuMyBIMTE0OS40IiBzdHJva2Utd2lkdGg9IjMuNCIgc3Ryb2tlLWxpbmVjYXA9ImJ1dHQiLz4KICA8L2c+CjwvZz4KPHVzZSBpZD0id2hpdGUtcGVyaW1ldGVyIiBocmVmPSIjcGxhdGUtb3V0bGluZSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmFmYWZhIiBzdHJva2Utd2lkdGg9IjIuNjUiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+"};
+  for(const key of ['base','marks']){
+    const img=new Image();images[key]=img;
+    img.onload=()=>{complete++;if(complete===2)window.dispatchEvent(new Event('kobra-plate-ready'));};
+    img.onerror=()=>console.warn('Could not render the embedded PEI plate layer:',key);
+    img.src=source[key];
+  }
+  return {images,worldRect,size,svgBounds,isReady:(key)=>images[key]?.complete&&images[key]?.naturalWidth>0};
+})();
+
+</script>
+  <script>
+/* Kobra Mesh Lab 1.1 — stand-alone WebGL depth-tested mesh renderer.
+   This file only draws local numeric arrays. No remote dependencies. */
+'use strict';
+class MeshSurfaceRenderer {
+  constructor(canvas) {
+    this.canvas = canvas;
+    this.gl = canvas.getContext('webgl', {alpha:false, antialias:true, preserveDrawingBuffer:true});
+    this.yaw = Math.PI / 4;
+    this.elevation = 0.53;
+    this.zoom = 1;
+    this.panX = 0;
+    this.panY = 0;
+    this.last = null;
+    this.cachedData = null;
+    this.activePointer = null;
+    this.drag = null;
+    this.onViewChange = null;
+    if(this.gl) this.setupGL();
+    canvas.addEventListener('pointerdown', ev => {
+      if(!this.last) return;
+      this.activePointer=ev.pointerId;
+      this.drag={x:ev.clientX,y:ev.clientY,yaw:this.yaw,elevation:this.elevation,panX:this.panX,panY:this.panY,shift:ev.shiftKey};
+      canvas.setPointerCapture(ev.pointerId);
+      canvas.style.cursor='grabbing';
+    });
+    canvas.addEventListener('pointermove', ev => {
+      if(this.activePointer!==ev.pointerId||!this.drag) return;
+      const dx=ev.clientX-this.drag.x, dy=ev.clientY-this.drag.y;
+      if(this.drag.shift) {
+        this.panX=this.drag.panX+dx/canvas.clientWidth*2.7;
+        this.panY=this.drag.panY-dy/canvas.clientHeight*2.7;
+      } else {
+        this.yaw=this.drag.yaw+dx*.008;
+        this.elevation=Math.max(.14,Math.min(1.48,this.drag.elevation+dy*.006));
+      }
+      this.draw();
+      this.onViewChange?.();
+    });
+    const end=ev=>{if(this.activePointer===ev.pointerId){this.drag=null;this.activePointer=null;canvas.style.cursor='grab';}};
+    canvas.addEventListener('pointerup',end); canvas.addEventListener('pointercancel',end);
+    canvas.addEventListener('wheel',ev=>{if(!this.last)return;ev.preventDefault();this.zoom=Math.max(.35,Math.min(4,this.zoom*Math.exp(-ev.deltaY*.001)));this.draw();this.onViewChange?.();},{passive:false});
+    canvas.addEventListener('dblclick',()=>this.reset());
+    canvas.style.cursor='grab';canvas.style.touchAction='none';
+  }
+  reset(){this.yaw=Math.PI/4;this.elevation=.53;this.zoom=1;this.panX=0;this.panY=0;this.draw();this.onViewChange?.();}
+  setupGL(){
+    const gl=this.gl;
+    const vert='attribute vec3 aPos; attribute vec4 aCol; uniform float uYaw,uElev,uZoom,uAspect; uniform vec2 uPan; varying vec4 vCol; void main(){float s=sin(uYaw),c=cos(uYaw),se=sin(uElev),ce=cos(uElev);float h=aPos.x*c+aPos.y*s;float xx=aPos.x*s-aPos.y*c;float yy=aPos.z*ce-h*se;float depth=h*ce+aPos.z*se;gl_Position=vec4((xx*uZoom+uPan.x)/uAspect,(yy*uZoom+uPan.y),-depth*.012,1.0);gl_PointSize=7.0;vCol=aCol;}';
+    const frag='precision mediump float; varying vec4 vCol; uniform float uPoint; void main(){if(uPoint>0.5){vec2 q=gl_PointCoord*2.0-1.0;if(dot(q,q)>1.0)discard;}gl_FragColor=vCol;}';
+    const shader=(kind,src)=>{const s=gl.createShader(kind);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error('Mesh shader: '+gl.getShaderInfoLog(s));return s;};
+    const program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vert));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,frag));gl.linkProgram(program);
+    if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error('Mesh link: '+gl.getProgramInfoLog(program));
+    this.program=program;this.attribPos=gl.getAttribLocation(program,'aPos');this.attribCol=gl.getAttribLocation(program,'aCol');
+    this.uniforms=Object.fromEntries(['uYaw','uElev','uZoom','uAspect','uPan','uPoint'].map(n=>[n,gl.getUniformLocation(program,n)]));
+    this.positionBuffer=gl.createBuffer();this.colorBuffer=gl.createBuffer();
+    const texVert='attribute vec3 aPos;attribute vec2 aUV;uniform float uYaw,uElev,uZoom,uAspect;uniform vec2 uPan;varying vec2 vUV;void main(){float si=sin(uYaw),co=cos(uYaw),se=sin(uElev),ce=cos(uElev);float h=aPos.x*co+aPos.y*si;float xx=aPos.x*si-aPos.y*co;float yy=aPos.z*ce-h*se;float dep=h*ce+aPos.z*se;gl_Position=vec4((xx*uZoom+uPan.x)/uAspect,(yy*uZoom+uPan.y),-dep*.012,1.0);vUV=aUV;}';
+    const texFrag='precision mediump float;varying vec2 vUV;uniform sampler2D uTex;uniform float uAlpha;void main(){gl_FragColor=texture2D(uTex,vUV)*uAlpha;}';
+    const texProgram=gl.createProgram();gl.attachShader(texProgram,shader(gl.VERTEX_SHADER,texVert));gl.attachShader(texProgram,shader(gl.FRAGMENT_SHADER,texFrag));gl.linkProgram(texProgram);
+    if(!gl.getProgramParameter(texProgram,gl.LINK_STATUS))throw Error('Plate shader: '+gl.getProgramInfoLog(texProgram));
+    this.texProgram=texProgram;
+    this.texPos=gl.getAttribLocation(texProgram,'aPos');this.texUV=gl.getAttribLocation(texProgram,'aUV');
+    this.texUniforms=Object.fromEntries(['uYaw','uElev','uZoom','uAspect','uPan','uTex','uAlpha'].map(n=>[n,gl.getUniformLocation(texProgram,n)]));
+    this.texPosBuffer=gl.createBuffer();this.texUVBuffer=gl.createBuffer();this.plateTextures={};
+    gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);
+  }
+  static heat(z,min,max){
+    let t=(z-min)/(max-min||1);t=Math.max(0,Math.min(1,t));
+    const lo=[34,115,158],mid=[223,237,231],hi=[234,108,82],a=t<.5?lo:mid,b=t<.5?mid:hi,f=t<.5?t*2:(t-.5)*2;
+    return a.map((n,i)=>(n*(1-f)+b[i]*f)/255);
+  }
+  data(mesh,{scale=100,coarse=false,mask=false,showPoints=true,showPlate=true,baseA=null,baseB=null}={}) {
+    if(!mesh?.region) return null;
+    const r=mesh.region,plate=buildPlateRect(),frame=showPlate?unionRect(r,plate):r,span=Math.max(frame[2]-frame[0],frame[3]-frame[1]);
+    const centerX=(frame[0]+frame[2])/2, centerY=(frame[1]+frame[3])/2;
+    const nxf=x=>-((x-centerX)*2/span), nyf=y=>((y-centerY)*2/span);
+    const nx=coarse ? (mesh.virtual?Math.max(baseA?.nx||2,baseB?.nx||2)*2-1:mesh.nx) : 61;
+    const ny=coarse ? (mesh.virtual?Math.max(baseA?.ny||2,baseB?.ny||2)*2-1:mesh.ny) : 61;
+    const zvals=mesh.rows.flat(), zref=mesh.virtual ? 0 : zvals.reduce((a,b)=>a+b,0)/zvals.length;
+    const zmin=Math.min(...zvals),zmax=Math.max(...zvals);
+    const colorLimit=mesh.virtual?Math.max(Math.abs(zmin),Math.abs(zmax),.000001):null;
+    const colorMin=colorLimit===null?zmin:-colorLimit,colorMax=colorLimit===null?zmax:colorLimit;
+    const v=[];let hits=0,valid=0;
+    const confidence=(x,y)=>{
+      if(!baseA||!baseB)return true;
+      const near = m=>{
+        let tx=(x-m.region[0])/(m.region[2]-m.region[0])*(m.nx-1);
+        let ty=(y-m.region[1])/(m.region[3]-m.region[1])*(m.ny-1);
+        return Math.hypot(tx-Math.round(tx),ty-Math.round(ty))<=.60;
+      };
+      return near(baseA)&&near(baseB);
+    };
+    for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){
+      const x=r[0]+(r[2]-r[0])*i/(nx-1),y=r[1]+(r[3]-r[1])*j/(ny-1),z=sample(mesh,x,y);
+      const p={x:nxf(x),y:nyf(y),z:(z-zref)*2*scale/span,value:z,ok:confidence(x,y)};
+      v.push(p);valid++;if(p.ok)hits++;
+    }
+    const triangles=[];
+    for(let j=0;j<ny-1;j++)for(let i=0;i<nx-1;i++){
+      const ids=[j*nx+i,j*nx+i+1,(j+1)*nx+i,(j+1)*nx+i+1];
+      for(const face of [[ids[0],ids[1],ids[3]],[ids[0],ids[3],ids[2]]]){
+        if(mask&&face.some(k=>!v[k].ok))continue;
+        triangles.push(...face);
+      }
+    }
+    const positions=[],colors=[];
+    for(const id of triangles){const p=v[id];positions.push(p.x,p.y,p.z);colors.push(...MeshSurfaceRenderer.heat(p.value,colorMin,colorMax),1);}
+    const gridPos=[],gridCols=[];
+    // Draw thin physical XY reference grid behind the surface, never as a filled plane.
+    for(let i=0;i<=10;i++){
+      const t=-1+2*i/10;
+      for(const points of [[[t,-1,0],[t,1,0]],[[-1,t,0],[1,t,0]]]){
+        for(const q of points){gridPos.push(...q);gridCols.push(.18,.29,.34,1);}
+      }
+    }
+    const pointPos=[],pointCols=[];
+    const addPoints=(m,color)=>{
+      if(!m?.region) return;
+      for(const p of pointsOf(m)){
+        if(p.x<r[0]-1e-8||p.x>r[2]+1e-8||p.y<r[1]-1e-8||p.y>r[3]+1e-8)continue;
+        const val=sample(mesh,p.x,p.y);
+        pointPos.push(nxf(p.x),nyf(p.y),(val-zref)*2*scale/span+.003);
+        pointCols.push(...color,1);
+      }
+    };
+    const plateTexPos=[],plateTexUV=[];
+    if(showPlate){
+      const rect=KOBRA_PLATE.worldRect, z=-0.016;
+      const point=(x,y)=>[nxf(x),nyf(y),z];
+      const bl=point(rect[0],rect[1]),br=point(rect[2],rect[1]),tr=point(rect[2],rect[3]),tl=point(rect[0],rect[3]);
+      plateTexPos.push(...bl,...br,...tr,...bl,...tr,...tl);
+      plateTexUV.push(0,0, 1,0, 1,1, 0,0, 1,1, 0,1);
+    }
+    if(showPoints){
+      if(mesh.virtual) {addPoints(baseA,[.13,.97,.85]);addPoints(baseB,[1,.65,.36]);}
+      else addPoints(mesh,[1,1,1]);
+    }
+    return {positions,colors,gridPos,gridCols,pointPos,pointCols,plateTexPos,plateTexUV,range:zmax-zmin,confidenceFraction:hits/valid,triangles:triangles.length/3};
+  }
+  render(mesh,options={}){this.last={mesh,options};this.cachedData=mesh?this.data(mesh,options):null;this.draw();}
+  drawPlateTexture(data,layer,alpha){
+    const gl=this.gl;
+    if(!data.plateTexPos?.length||!KOBRA_PLATE.isReady(layer))return;
+    let tex=this.plateTextures[layer];
+    if(!tex){
+      tex=gl.createTexture();this.plateTextures[layer]=tex;
+      gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,true);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,KOBRA_PLATE.images[layer]);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    }
+    gl.useProgram(this.texProgram);const u=this.texUniforms;
+    gl.uniform1f(u.uYaw,this.yaw);gl.uniform1f(u.uElev,this.elevation);gl.uniform1f(u.uZoom,this.zoom*.92);
+    gl.uniform1f(u.uAspect,this.canvas.width/this.canvas.height);gl.uniform2f(u.uPan,this.panX,this.panY);
+    gl.uniform1f(u.uAlpha,alpha);
+    gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.uniform1i(u.uTex,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,this.texPosBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data.plateTexPos),gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(this.texPos);gl.vertexAttribPointer(this.texPos,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,this.texUVBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(data.plateTexUV),gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(this.texUV);gl.vertexAttribPointer(this.texUV,2,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.TRIANGLES,0,6);
+  }
+  draw(){
+    const {canvas,gl}=this,settings=this.last;
+    if(!gl){this.fallback(settings?.mesh);return;}
+    const data=this.cachedData;
+    gl.viewport(0,0,canvas.width,canvas.height);gl.clearColor(.97,.98,.99,1);gl.clearDepth(1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.enable(gl.BLEND);gl.blendFunc(gl.SRC_ALPHA,gl.ONE_MINUS_SRC_ALPHA);
+    if(!data)return;
+    const u=this.uniforms;gl.useProgram(this.program);
+    gl.uniform1f(u.uYaw,this.yaw);gl.uniform1f(u.uElev,this.elevation);gl.uniform1f(u.uZoom,this.zoom*.92);gl.uniform1f(u.uAspect,canvas.width/canvas.height);gl.uniform2f(u.uPan,this.panX,this.panY);
+    const draw=(pos,col,mode,points)=>{
+      if(!pos.length)return;
+      gl.bindBuffer(gl.ARRAY_BUFFER,this.positionBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(pos),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(this.attribPos,3,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(this.attribPos);
+      gl.bindBuffer(gl.ARRAY_BUFFER,this.colorBuffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(col),gl.DYNAMIC_DRAW);gl.vertexAttribPointer(this.attribCol,4,gl.FLOAT,false,0,0);gl.enableVertexAttribArray(this.attribCol);
+      gl.uniform1f(u.uPoint,points?1:0);gl.drawArrays(mode,0,pos.length/3);
+    };
+    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+    this.drawPlateTexture(data,'base',0.25);
+    gl.enable(gl.DEPTH_TEST);gl.depthMask(true);
+    gl.useProgram(this.program);
+    draw(data.gridPos,data.gridCols,gl.LINES,false);
+    draw(data.positions,data.colors,gl.TRIANGLES,false);
+    gl.disable(gl.DEPTH_TEST);gl.depthMask(false);
+    this.drawPlateTexture(data,'marks',0.98);
+    gl.useProgram(this.program);
+    draw(data.pointPos,data.pointCols,gl.POINTS,true);
+    gl.depthMask(true);gl.enable(gl.DEPTH_TEST);
+  }
+  fallback(mesh){
+    const c=this.canvas.getContext('2d'),w=this.canvas.width,h=this.canvas.height;
+    if(!c)return;
+    c.fillStyle='#f7fafc';c.fillRect(0,0,w,h);
+    if(!mesh||!this.cachedData){c.fillStyle='#91a8b3';c.textAlign='center';c.font='18px system-ui';c.fillText('Load a mesh to preview its surface',w/2,h/2);return;}
+    const {positions,colors,pointPos,pointCols,gridPos,plateTexPos}=this.cachedData;
+    const yaw=this.yaw,e=this.elevation,cy=Math.cos(yaw),sy=Math.sin(yaw),ce=Math.cos(e),se=Math.sin(e);
+    const project=(x,y,z)=>{
+      const along=x*cy+y*sy;
+      const sx=x*sy-y*cy, yy=z*ce-along*se, depth=along*ce+z*se;
+      return [w/2+(sx*this.zoom*.92+this.panX)*h/2,h/2-(yy*this.zoom*.92+this.panY)*h/2,depth];
+    };
+    const drawPlateImage= (layer,alpha)=>{
+      if(!plateTexPos?.length||!KOBRA_PLATE.isReady(layer))return;
+      const img=KOBRA_PLATE.images[layer], W=img.naturalWidth,H=img.naturalHeight;
+      const bl=project(...plateTexPos.slice(0,3)),br=project(...plateTexPos.slice(3,6)),tr=project(...plateTexPos.slice(6,9)),tl=project(...plateTexPos.slice(15,18));
+      c.save();c.globalAlpha=alpha;
+      c.setTransform((tr[0]-tl[0])/W,(tr[1]-tl[1])/W,(bl[0]-tl[0])/H,(bl[1]-tl[1])/H,tl[0],tl[1]);
+      c.drawImage(img,0,0);c.restore();
+    };
+    drawPlateImage('base',0.25);
+    c.strokeStyle='#9aa9b3';c.lineWidth=1;
+    for(let i=0;i<gridPos.length;i+=6){
+      const a=project(...gridPos.slice(i,i+3)),b=project(...gridPos.slice(i+3,i+6));
+      c.beginPath();c.moveTo(a[0],a[1]);c.lineTo(b[0],b[1]);c.stroke();
+    }
+    const faces=[];
+    for(let i=0;i<positions.length;i+=9){
+      const a=project(...positions.slice(i,i+3)),b=project(...positions.slice(i+3,i+6)),d=project(...positions.slice(i+6,i+9));
+      const color=[0,1,2].map(k=>Math.round(255*(colors[(i/3)*4+k]+colors[(i/3+1)*4+k]+colors[(i/3+2)*4+k])/3));
+      faces.push({a,b,d,depth:(a[2]+b[2]+d[2])/3,color});
+    }
+    faces.sort((a,b)=>a.depth-b.depth);
+    // Painter-sort fallback for browsers without WebGL. WebGL uses the depth buffer.
+    for(const t of faces){
+      c.beginPath();c.moveTo(t.a[0],t.a[1]);c.lineTo(t.b[0],t.b[1]);c.lineTo(t.d[0],t.d[1]);c.closePath();
+      c.fillStyle=`rgb(${t.color.join(',')})`;c.fill();
+    }
+    drawPlateImage('marks',0.98);
+    for(let i=0;i<pointPos.length;i+=3){
+      const p=project(...pointPos.slice(i,i+3));
+      const col=pointCols.slice(i/3*4,i/3*4+3).map(x=>Math.round(x*255));
+      c.beginPath();c.arc(p[0],p[1],3.1,0,Math.PI*2);c.fillStyle=`rgb(${col.join(',')})`;c.fill();c.strokeStyle='#10212a';c.lineWidth=1;c.stroke();
+    }
+  }
+
+}
+
+
+</script>
+  <script>
+/* Kobra Mesh Lab — offline-only, no networking, no external runtime dependencies.
+   Diagnostic archive is a traditional ZipCrypto encrypted ZIP containing avata_main*.log.
+   Coordinate interpretation matches the log exporter: rows = ascending Y, columns = ascending X.
+*/
+'use strict';
+const MAX_LOG_BYTES = 18 * 1024 * 1024;
+const MAX_TOTAL_LOG_BYTES = 64 * 1024 * 1024;
+const MAX_CSV_BYTES = 2 * 1024 * 1024;
+const MAX_LOG_ENTRIES = 50;
+const PACK_PASSWORD = '2YLVrATRvUEnMeXk6Vtc7qxfzYM4TJzrLnEBma8zpUKeGtseGWqp4LXs7e8KeU2u';
+const $ = id => document.getElementById(id);
+const state = { A: [], B: [], selectedA: null, selectedB: null, difference: null, demo: false };
+const mapRenderCache = new Map();
+const PNG_EXPORT_SCALE = 2;
+const BUILD_PLATE_SIZE = 265;
+function buildPlateRect(size=BUILD_PLATE_SIZE){ return [0,0,size,size]; }
+function unionRect(a,b){ return [Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])]; }
+function mapXYToCanvas(rect,x0,y0,plotW,plotH,x,y){ return [x0+(x-rect[0])/(rect[2]-rect[0])*plotW, y0+plotH-(y-rect[1])/(rect[3]-rect[1])*plotH]; }
+/* Both the 2D and 3D plate layers originate from assets/pei-kobra-x.svg.
+   The physical 0..265 square maps to SVG coordinates [81.2,67.3]..[1172.3,1155.2].
+   The lower-right tab extends beyond that square for orientation only. */
+function drawPlateArt2D(ctx,viewRect,x0,y0,plotW,plotH,layer){
+  if(typeof KOBRA_PLATE==='undefined'||!KOBRA_PLATE.isReady(layer)) return;
+  const rect=KOBRA_PLATE.worldRect;
+  const [left,top]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,rect[0],rect[3]);
+  const [right,bottom]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,rect[2],rect[1]);
+  ctx.save();
+  ctx.globalAlpha=layer==='base'?0.24:0.95;
+  if(layer==='marks'){
+    ctx.shadowColor='rgba(35,45,53,.7)';ctx.shadowBlur=1.8;
+  }
+  ctx.drawImage(KOBRA_PLATE.images[layer],left,top,right-left,bottom-top);
+  ctx.restore();
+}
+const decoder = new TextDecoder('utf-8', { fatal: false });
+const encoder = new TextEncoder();
+const number = '[-+]?(?:\\d+\\.?\\d*|\\.\\d+)(?:[eE][-+]?\\d+)?';
+const RE_REGION = new RegExp('The adaptive Bed region:\\s*\\(\\[\\s*('+number+')\\s*,\\s*('+number+')\\s*\\],\\[\\s*('+number+')\\s*,\\s*('+number+')\\s*\\]\\)');
+const RE_POINTS = /The adaptive Bed points:\s*\((\d+)\s*,\s*(\d+)\)/;
+const RE_STAMP = /^\[(\d{4}-\d{2}-\d{2})\s+(\d{2}:\d{2}:\d{2})/;
+const RE_MROW = new RegExp('^\\s*\\[((?:\\s*'+number+'\\s*,)*\\s*'+number+'\\s*)\\]\\s*$');
+function setStatus(message, level = '') { $('status').textContent = message; $('status').className = 'status ' + level; }
+const u16 = (d,p) => d.getUint16(p,true), u32=(d,p)=>d.getUint32(p,true);
+const crcTable = new Uint32Array(256);
+for (let i=0;i<256;i++){let c=i;for(let j=0;j<8;j++)c=(c&1)?(0xedb88320^(c>>>1)):(c>>>1);crcTable[i]=c>>>0;}
+const crcStep=(c,b)=>(crcTable[(c^b)&255]^(c>>>8))>>>0;
+function crc32(bytes){let c=0xffffffff;for(let i=0;i<bytes.length;i++)c=crcStep(c,bytes[i]);return (c^0xffffffff)>>>0;}
+function zipDecrypt(input, password, expected, verifyTime, usesDescriptor){
+  let k0=0x12345678,k1=0x23456789,k2=0x34567890;
+  function advance(b){k0=crcStep(k0,b);k1=(Math.imul(((k1+(k0&255))>>>0),134775813)+1)>>>0;k2=crcStep(k2,k1>>>24);}
+  for(const b of encoder.encode(password))advance(b);
+  const out = new Uint8Array(input.length);
+  for(let i=0;i<input.length;i++){
+    const t=(k2|2)>>>0;
+    const decrypt = (Math.imul(t,(t^1))>>>8)&255;
+    const plain=input[i]^decrypt;
+    out[i]=plain;
+    advance(plain);
+  }
+  if(out.length<12)throw Error('Incomplete ZIP encryption header');
+  const check=usesDescriptor?((verifyTime>>>8)&255):((expected>>>24)&255);
+  if(out[11]!==check)throw Error('Incorrect archive password or corrupted encrypted header');
+  return out.subarray(12);
+}
+function zipEntries(buffer){
+  const dv=new DataView(buffer), bytes=new Uint8Array(buffer);const end=Math.max(0,bytes.length-65557);
+  let eocd=-1;for(let i=bytes.length-22;i>=end;i--){if(dv.getUint32(i,true)===0x06054b50){eocd=i;break;}}
+  if(eocd<0)throw Error('Not a ZIP-based AC_LOG archive');
+  const count=u16(dv,eocd+10), centralStart=u32(dv,eocd+16);
+  if(count>1000||centralStart>=bytes.length)throw Error('Unsupported ZIP directory');
+  const entries=[];let cur=centralStart;
+  for(let i=0;i<count;i++){
+    if(cur+46>bytes.length||u32(dv,cur)!==0x02014b50)throw Error('Invalid ZIP central directory');
+    const flag=u16(dv,cur+8),method=u16(dv,cur+10),time=u16(dv,cur+12);
+    const crc=u32(dv,cur+16),size=u32(dv,cur+20),plainSize=u32(dv,cur+24);
+    const nameLen=u16(dv,cur+28),extra=u16(dv,cur+30),comment=u16(dv,cur+32),off=u32(dv,cur+42);
+    if(cur+46+nameLen+extra+comment>bytes.length)throw Error('ZIP directory is truncated');
+    const name=decoder.decode(bytes.subarray(cur+46,cur+46+nameLen));
+    entries.push({name,flag,method,time,crc,size,plainSize,off});
+    cur+=46+nameLen+extra+comment;
+  }
+  return { dv,bytes,entries };
+}
+// Limit actual decompressed output: ZIP metadata alone is not a safe zip-bomb guard.
+function inflateRawLimited(payload, expected){
+  const inflater=new window.pako.Inflate({raw:true});
+  const chunks=[];
+  let total=0;
+  inflater.onData=chunk=>{
+    total+=chunk.length;
+    if(total>MAX_LOG_BYTES || total>expected)throw Error('Decompressed log exceeds safety limit or declared ZIP size');
+    chunks.push(chunk);
+  };
+  inflater.push(payload,true);
+  if(inflater.err||!inflater.ended)throw Error('Corrupted DEFLATE stream');
+  const out=new Uint8Array(total);let offset=0;
+  for(const chunk of chunks){out.set(chunk,offset);offset+=chunk.length;}
+  return out;
+}
+function getArchiveEntry(zip, e){
+  const {dv,bytes}=zip;
+  if(e.plainSize>MAX_LOG_BYTES||e.size>MAX_LOG_BYTES)throw Error(`Oversized log (${e.name})`);
+  if(e.off+30>bytes.length||u32(dv,e.off)!==0x04034b50)throw Error('Invalid local ZIP header');
+  const pos=e.off+30+u16(dv,e.off+26)+u16(dv,e.off+28);
+  if(pos+e.size>bytes.length)throw Error('Truncated ZIP entry');
+  let payload=bytes.subarray(pos,pos+e.size);
+  if(e.flag&1)payload=zipDecrypt(payload,PACK_PASSWORD,e.crc,e.time,!!(e.flag&8));
+  let clear;
+  if(e.method===0)clear=payload;
+  else if(e.method===8)clear=inflateRawLimited(payload,e.plainSize);
+  else throw Error(`Unsupported ZIP compression method ${e.method}`);
+  if(clear.length!==e.plainSize||crc32(clear)!==e.crc)throw Error(`Invalid checksum for ${e.name}`);
+  return clear;
+}
+function parseLog(text, source){
+  const lines=text.split(/\r?\n/), meshes=[];
+  let region=null, dims=null, regionTime=null, mode='unknown', probeWarnings=[];
+  // Non-adaptive Kobra X probing omits "The adaptive Bed region".
+  // Keep each probing run separate to avoid attaching old print regions to a full-bed grid.
+  const probeStart=/script:LEVIQ_PROBE(?:\s+ADAPTIVE=(\d+))?\b/;
+  const warningCoord=/\(\s*([-+]?\d+(?:\.\d+)?)\s*,\s*([-+]?\d+(?:\.\d+)?)\s*\)Sampled data exceeds the threshold/;
+  const evenlySpaced=values => values.length>1 && values.every((v,i)=>i===0||Math.abs((v-values[0])/(i)-(values[1]-values[0]))<0.05);
+  for(let i=0;i<lines.length;i++){
+    const line=lines[i];
+    const begin=probeStart.exec(line);
+    if(begin){
+      mode=begin[1]==='0'?'full':'adaptive';
+      region=null;dims=null;regionTime=null;probeWarnings=[];
+    }
+    const r=RE_REGION.exec(line);
+    if(r){region=r.slice(1).map(Number);regionTime=RE_STAMP.exec(line)?.slice(1).join(' ')||null;mode='adaptive';}
+    const p=RE_POINTS.exec(line);if(p)dims=p.slice(1).map(Number);
+    if(mode==='full'){
+      const xy=warningCoord.exec(line);
+      if(xy)probeWarnings.push([Number(xy[1]),Number(xy[2])]);
+    }
+    if(!line.includes('Bed Leveling: Regions:'))continue;
+    const rows=[];
+    for(let j=i+1;j<lines.length;j++){
+      const m=RE_MROW.exec(lines[j]);if(!m)break;
+      const values=m[1].split(',').map(Number);
+      if(values.every(Number.isFinite))rows.push(values);else break;
+      if(rows.length>300)break;
+    }
+    if(rows.length<2||rows[0].length<2||rows.length*rows[0].length>5000||rows.some(x=>x.length!==rows[0].length))continue;
+    const stamp=RE_STAMP.exec(line),date=stamp?.[1]||'Unknown date',time=stamp?.[2]||'Unknown time';
+    const nx=rows[0].length,ny=rows.length;
+    let validRegion=region&&region.every(Number.isFinite)&&region[2]>region[0]&&region[3]>region[1];
+    if(validRegion&&regionTime&&stamp){
+      const t1=Date.parse(regionTime.replace(' ','T')),t2=Date.parse(date+'T'+time);
+      if(Number.isFinite(t1)&&Number.isFinite(t2)&&Math.abs(t2-t1)>30*60*1000)validRegion=false;
+    }
+    // Only trust coordinates independently recovered from this full-bed probing run.
+    // Warnings are incidental; if they don't cover all rows/columns, leave XY unknown.
+    let inferredRegion=null;
+    if(mode==='full'){
+      const xs=[...new Set(probeWarnings.map(pair=>pair[0]))].sort((a,b)=>a-b);
+      const ys=[...new Set(probeWarnings.map(pair=>pair[1]))].sort((a,b)=>a-b);
+      if(xs.length===nx&&ys.length===ny&&evenlySpaced(xs)&&evenlySpaced(ys)){
+        inferredRegion=[xs[0],ys[0],xs.at(-1),ys.at(-1)];
+      }
+    }
+    const gridRegion=mode==='full'?inferredRegion:(validRegion&&(!dims||(dims[0]===nx&&dims[1]===ny))?[...region]:null);
+    const mesh={rows,region:gridRegion,date,time,source,dims:[nx,ny],nx,ny,mode:mode==='full'?'full':mode==='adaptive'?'adaptive':'unknown',
+      regionSource:mode==='full'&&inferredRegion?'probe retry coordinates':gridRegion?'firmware region':'unavailable'};
+    meshes.push(mesh);
+    // End of run: prevent accidental reuse of a previously detected area.
+    region=null;dims=null;regionTime=null;mode='unknown';probeWarnings=[];
+  }
+  return meshes;
+}
+async function parseFile(file){
+  if(file.size>80*1024*1024)throw Error('File is larger than the 80 MB safety limit.');
+  const buffer=await file.arrayBuffer();
+  if(file.name.toLowerCase().endsWith('.csv')){if(file.size>MAX_CSV_BYTES)throw Error('CSV is larger than the 2 MB safety limit.');return [parseCSV(decoder.decode(buffer),file.name)];}
+  const zip=zipEntries(buffer);
+  const targets=zip.entries.filter(e=>/^avata_main(?:\.\d+)?\.log$/i.test(e.name.split('/').pop()));
+  if(!targets.length)throw Error('Archive has no avata_main*.log entries. Is it the printer’s AC_LOG export?');
+  if(targets.length>MAX_LOG_ENTRIES||targets.reduce((sum,e)=>sum+e.plainSize,0)>MAX_TOTAL_LOG_BYTES)throw Error('Archive exceeds the log entry count or total expanded size safety limit.');
+  const result=[];let errors=[];
+  for(const entry of targets){
+    try { const data=getArchiveEntry(zip,entry); result.push(...parseLog(decoder.decode(data),entry.name)); }
+    catch(e) { errors.push(entry.name+': '+e.message); }
+  }
+  if(!result.length)throw Error(errors.length?`No mesh recovered. ${errors[0]}`:'No "Bed Leveling: Regions" matrix found. Export logs after calibration.');
+  const unique=new Map();for(const m of result)unique.set([m.date,m.time,m.region?.join(','),m.rows.flat().join(',')].join('|'),m);
+  return [...unique.values()].sort((a,b)=>(a.date+' '+a.time).localeCompare(b.date+' '+b.time));
+}
+function parseCSV(raw,name){
+  const lines=raw.trim().split(/\r?\n/).filter(Boolean);
+  if(lines.length>5001)throw Error('CSV has too many rows (max 5,000 measurements).');
+  if(lines.length<5||lines[0].replace(/^\uFEFF/,'').trim()!=='x_mm,y_mm,z_mm,column,row')throw Error('CSV columns must be x_mm,y_mm,z_mm,column,row (as exported by Mesh Lab).');
+  const vals=[];
+  for(const line of lines.slice(1)){
+    const c=line.split(',').map(Number);if(c.length!==5||c.some(v=>!Number.isFinite(v)))throw Error('Invalid numeric CSV row');
+    vals.push(c);
+  }
+  const nx=Math.max(...vals.map(v=>v[3]))+1, ny=Math.max(...vals.map(v=>v[4]))+1;
+  if(nx<2||ny<2||nx*ny!==vals.length||nx*ny>5000)throw Error('CSV must contain one complete rectangular grid');
+  const rows=Array.from({length:ny},()=>Array(nx).fill(null));
+  for(const [x,y,z,col,row] of vals){if(!Number.isInteger(col)||!Number.isInteger(row)||row<0||col<0||row>=ny||col>=nx||rows[row][col]!==null)throw Error('Duplicate or invalid grid coordinates in CSV');rows[row][col]=z;}
+  if(rows.some(r=>r.some(z=>z===null)))throw Error('Incomplete CSV grid');
+  const r=[Math.min(...vals.map(v=>v[0])),Math.min(...vals.map(v=>v[1])),Math.max(...vals.map(v=>v[0])),Math.max(...vals.map(v=>v[1]))];
+  if(r[0]===r[2]||r[1]===r[3])throw Error('CSV must have distinct XY coordinates');
+  const dt=/\d{4}-\d{2}-\d{2}/.exec(name),tm=/\d{2}-\d{2}-\d{2}/.exec(name);
+  return {rows,region:r,date:dt?.[0]||'CSV import',time:tm?.[0]?.replace(/-/g,':')||'',source:name,nx,ny};
+}
+function flatten(m){return m.rows.flat();}
+function minMax(m){const a=flatten(m);return {min:Math.min(...a),max:Math.max(...a),range:Math.max(...a)-Math.min(...a)};}
+function sample(m,x,y){
+  if(!m?.region)return NaN;
+  const [x0,y0,x1,y1]=m.region,eps=1e-8;
+  if(x<x0-eps||x>x1+eps||y<y0-eps||y>y1+eps)return NaN;
+  const fx=Math.min(m.nx-1,Math.max(0,(x-x0)/(x1-x0)*(m.nx-1))),fy=Math.min(m.ny-1,Math.max(0,(y-y0)/(y1-y0)*(m.ny-1)));
+  const i=Math.min(m.nx-2,Math.floor(fx)),j=Math.min(m.ny-2,Math.floor(fy)),a=fx-i,b=fy-j;
+  const z=m.rows;return z[j][i]*(1-a)*(1-b)+z[j][i+1]*a*(1-b)+z[j+1][i]*(1-a)*b+z[j+1][i+1]*a*b;
+}
+function pointsOf(m){
+  if(!m?.region)return [];
+  const [xmin,ymin,xmax,ymax]=m.region,p=[];
+  for(let j=0;j<m.ny;j++)for(let i=0;i<m.nx;i++)p.push({x:xmin+(xmax-xmin)*i/(m.nx-1),y:ymin+(ymax-ymin)*j/(m.ny-1),z:m.rows[j][i]});
+  return p;
+}
+function solve3(A,b){let m=A.map((row,i)=>[...row,b[i]]);for(let k=0;k<3;k++){let best=k;for(let i=k+1;i<3;i++)if(Math.abs(m[i][k])>Math.abs(m[best][k]))best=i;if(Math.abs(m[best][k])<1e-12)return null;[m[k],m[best]]=[m[best],m[k]];const pivot=m[k][k];for(let j=k;j<4;j++)m[k][j]/=pivot;for(let i=0;i<3;i++)if(i!==k){const factor=m[i][k];for(let j=k;j<4;j++)m[i][j]-=factor*m[k][j];}}return m.map(x=>x[3]);}
+function fitPlane(pts){
+  const n=pts.length;if(n<4)return null;const cx=pts.reduce((s,p)=>s+p.x,0)/n,cy=pts.reduce((s,p)=>s+p.y,0)/n;
+  let sxx=0,sxy=0,syy=0,sx=0,sy=0,sz=0,sxz=0,syz=0;
+  for(const p of pts){let x=p.x-cx,y=p.y-cy;sxx+=x*x;sxy+=x*y;syy+=y*y;sx+=x;sy+=y;sz+=p.z;sxz+=x*p.z;syz+=y*p.z;}
+  const q=solve3([[n,sx,sy],[sx,sxx,sxy],[sy,sxy,syy]],[sz,sxz,syz]);
+  if(!q)return null;
+  const predicted=(x,y)=>q[0]+q[1]*(x-cx)+q[2]*(y-cy);
+  let sq=0;for(const p of pts)sq+=(p.z-predicted(p.x,p.y))**2;
+  return {a:q[0],dx:q[1],dy:q[2],cx,cy,rms:Math.sqrt(sq/n), predicted};
+}
+function makeDifference(a,b,mode){
+  if(!a.region||!b.region)return {issue:'One mesh lacks XY bounds, so coordinate-based comparison is unavailable.'};
+  const r=[Math.max(a.region[0],b.region[0]),Math.max(a.region[1],b.region[1]),Math.min(a.region[2],b.region[2]),Math.min(a.region[3],b.region[3])];
+  if(r[2]-r[0]<1||r[3]-r[1]<1)return {issue:'The two adaptive probing regions do not overlap enough to compare.'};
+  const nx=51,ny=51,rows=[],p=[];
+  for(let j=0;j<ny;j++){let row=[];for(let i=0;i<nx;i++){const x=r[0]+(r[2]-r[0])*i/(nx-1),y=r[1]+(r[3]-r[1])*j/(ny-1),z=sample(b,x,y)-sample(a,x,y);row.push(z);p.push({x,y,z});}rows.push(row);}
+  const rawMean=p.reduce((s,q)=>s+q.z,0)/p.length,plane=fitPlane(p);
+  if(mode==='centered')for(const row of rows)for(let i=0;i<row.length;i++)row[i]-=rawMean;
+  if(mode==='detrended'&&plane)for(let j=0;j<ny;j++)for(let i=0;i<nx;i++){const x=r[0]+(r[2]-r[0])*i/(nx-1),y=r[1]+(r[3]-r[1])*j/(ny-1);rows[j][i]-=plane.predicted(x,y);}
+  const w=flatten({rows});const rms=Math.sqrt(w.reduce((s,z)=>s+z*z,0)/w.length);
+  return {mesh:{rows,region:r,nx,ny,date:'Difference',time:'',source:'B − A',virtual:true},rawMean,plane,rms,issue:null};
+}
+const lerp=(a,b,t)=>a+(b-a)*t;
+function heatRGB(z,min,max){
+  let t=(z-min)/(max-min||1);t=Math.max(0,Math.min(1,t));
+  const low=[34,115,158],mid=[223,237,231],high=[234,108,82];let v=t<.5?t*2:(t-.5)*2,c0=t<.5?low:mid,c1=t<.5?mid:high;
+  return [0,1,2].map(k=>Math.round(lerp(c0[k],c1[k],v)));
+}
+function paintEmpty(canvas,text){const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='#f7fafc';ctx.fillRect(0,0,w,h);ctx.strokeStyle='#cfd8df';ctx.setLineDash([6,8]);ctx.strokeRect(54,23,w-74,h-75);ctx.setLineDash([]);ctx.fillStyle='#667788';ctx.font='16px system-ui';ctx.textAlign='center';ctx.fillText(text,w/2,h/2);ctx.textAlign='start';}
+function paintMap(canvas,m,scale,showDots=true,showPlate=false,opts={}){
+  if(!m){paintEmpty(canvas,'No calibration loaded');return;}
+  if(canvas.id)mapRenderCache.set(canvas.id,{m,scale,showDots,showPlate,opts});
+  const exportScale=opts.exportScale||1;
+  const ctx=canvas.getContext('2d');
+  ctx.setTransform(exportScale,0,0,exportScale,0,0);
+  const w=canvas.width/exportScale,h=canvas.height/exportScale;
+  const showValues=!!opts.showValues;
+  const valueGrid=opts.valueGrid||null;
+  ctx.fillStyle='#f7fafc';ctx.fillRect(0,0,w,h);
+  const left=52,top=19,bottom=42,right=17,availW=w-left-right,availH=h-top-bottom;
+  const region=m.region||[0,0,m.nx-1,m.ny-1];
+  const plate=buildPlateRect();
+  const viewRect=showPlate?unionRect(region,plate):region;
+  const ratio=(viewRect[2]-viewRect[0])/(viewRect[3]-viewRect[1]);
+  let plotW=availW,plotH=availH;if(availW/availH>ratio)plotW=availH*ratio;else plotH=availW/ratio;
+  const x0=left+(availW-plotW)/2,y0=top+(availH-plotH)/2;
+  if(showPlate)drawPlateArt2D(ctx,viewRect,x0,y0,plotW,plotH,'base');
+  const px=180*exportScale,py=Math.max(60*exportScale,Math.round(px/ratio)),buf=document.createElement('canvas');buf.width=px;buf.height=py;
+  const bctx=buf.getContext('2d'),image=bctx.createImageData(px,py);
+  for(let j=0;j<py;j++)for(let i=0;i<px;i++){
+    const x=region[0]+(region[2]-region[0])*(i+.5)/px,y=region[3]-(region[3]-region[1])*(j+.5)/py;
+    const z=m.region?sample(m,x,y):sample({...m,region},x,y);
+    const color=heatRGB(z,scale.min,scale.max),ind=(j*px+i)*4;
+    image.data[ind]=color[0];image.data[ind+1]=color[1];image.data[ind+2]=color[2];image.data[ind+3]=255;
+  }
+  bctx.putImageData(image,0,0);
+  ctx.imageSmoothingEnabled=true;
+  const [hx0,hy1]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,region[0],region[1]);
+  const [hx1,hy0]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,region[2],region[3]);
+  ctx.drawImage(buf,hx0,hy0,hx1-hx0,hy1-hy0);
+  if(showPlate)drawPlateArt2D(ctx,viewRect,x0,y0,plotW,plotH,'marks');
+  ctx.strokeStyle='rgba(84,102,120,.42)';ctx.lineWidth=1;ctx.strokeRect(hx0,hy0,hx1-hx0,hy1-hy0);
+  ctx.strokeStyle='rgba(120,138,152,.28)';
+  for(let t=1;t<5;t++){
+    let x=x0+t*plotW/5,y=y0+t*plotH/5;ctx.beginPath();ctx.moveTo(x,y0);ctx.lineTo(x,y0+plotH);ctx.moveTo(x0,y);ctx.lineTo(x0+plotW,y);ctx.stroke();
+  }
+  const drawValueLabel=(x,y,z)=>{
+    const cellColor=heatRGB(z,scale.min,scale.max);
+    const luminance=(0.2126*cellColor[0]+0.7152*cellColor[1]+0.0722*cellColor[2])/255;
+    const label=(z>0?'+':'')+z.toFixed(2).replace('-', '−');
+    ctx.font='bold 11px ui-monospace,monospace';
+    ctx.textAlign='center';
+    ctx.lineWidth=3.2;
+    ctx.strokeStyle=luminance>0.72?'rgba(255,255,255,0.98)':'rgba(248,250,252,0.94)';
+    ctx.fillStyle=luminance>0.72?'#24313a':'#13202a';
+    ctx.strokeText(label,x,y-6);
+    ctx.fillText(label,x,y-6);
+  };
+  if(showDots&&!m.virtual&&m.nx*m.ny<=70){
+    for(let j=0;j<m.ny;j++)for(let i=0;i<m.nx;i++){
+      const dataX=region[0]+(region[2]-region[0])*i/(m.nx-1),dataY=region[1]+(region[3]-region[1])*j/(m.ny-1),z=m.rows[j][i];
+      const [x,y]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,dataX,dataY);
+      ctx.beginPath();ctx.fillStyle='#fefefe';ctx.strokeStyle='#3a4652';ctx.lineWidth=1.5;ctx.arc(x,y,3.5,0,Math.PI*2);ctx.fill();ctx.stroke();
+      if((hx1-hx0)/(m.nx-1)>55&&(hy1-hy0)/(m.ny-1)>40)drawValueLabel(x,y,z);
+    }
+  }
+  if(showValues&&valueGrid){
+    const cols=Math.max(2,Math.round(valueGrid.cols||valueGrid[0]||5));
+    const rows=Math.max(2,Math.round(valueGrid.rows||valueGrid[1]||5));
+    if((hx1-hx0)/(cols-1)>44&&(hy1-hy0)/(rows-1)>34){
+      for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+        const dataX=region[0]+(region[2]-region[0])*i/(cols-1),dataY=region[1]+(region[3]-region[1])*j/(rows-1),z=sample(m,dataX,dataY);
+        const [x,y]=mapXYToCanvas(viewRect,x0,y0,plotW,plotH,dataX,dataY);
+        ctx.beginPath();ctx.fillStyle='rgba(247,250,252,0.88)';ctx.strokeStyle='rgba(58,70,82,0.82)';ctx.lineWidth=1.1;ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();ctx.stroke();
+        drawValueLabel(x,y,z);
+      }
+    }
+  }
+  ctx.textAlign='center';ctx.fillStyle='#5e6d79';ctx.font='12px ui-monospace,monospace';
+  ctx.fillText(`${viewRect[0].toFixed(1)} → ${viewRect[2].toFixed(1)} mm  ·  X`,x0+plotW/2,h-11);
+  ctx.save();ctx.translate(15,y0+plotH/2);ctx.rotate(-Math.PI/2);ctx.fillText(`${viewRect[1].toFixed(1)} → ${viewRect[3].toFixed(1)} mm  ·  Y`,0,0);ctx.restore();
+}
+function fmt(x,precision=3){return Number.isFinite(x)?(x<0?'−':'')+Math.abs(x).toFixed(precision):'—';}
+let surfaceRenderer=null;
+let zScaleAuto=true;
+function recommendedZScale(mesh) {
+  if(!mesh?.region)return 100;
+  const r=mesh.region, span=Math.max(r[2]-r[0],r[3]-r[1]);
+  const delta=minMax(mesh).range;
+  return Math.min(1000,Math.max(1,Math.round(.55*span/(2*Math.max(delta,.002)))));
+}
+function showSurface(mesh,chosen,a,b) {
+  if(!surfaceRenderer)surfaceRenderer=new MeshSurfaceRenderer($('surfaceCanvas'));
+  const slider=$('zScale');
+  if(zScaleAuto && mesh)slider.value=String(recommendedZScale(mesh));
+  const z=Number(slider.value);
+  $('zValue').textContent=(zScaleAuto?'Auto · ':'')+z+'×';
+  $('maskEstimates').disabled=!(mesh?.virtual && a?.region && b?.region);
+  const mask=mesh?.virtual && $('maskEstimates').checked;
+  const renderOpts={scale:z,coarse:$('coarseMesh').checked,mask,showPoints:$('showPoints').checked,showPlate:$('showPlate3D').checked,baseA:a,baseB:b};
+  surfaceRenderer.render(mesh,renderOpts);
+  const d=surfaceRenderer.cachedData;
+  $('surfaceCaption').textContent=mesh?`${chosen} · ${d?.triangles||0} triangles · ${z}× Z`:'No map selected';
+  $('surfaceInfo').textContent=mesh?.virtual ? `A and B probe positions shown on estimated difference surface. ${$('showPlate3D').checked?'The visual build plate follows the real Kobra X orientation; X0 / Y0 is the true outer lower-left plate corner and the plate spans 0.0–265.0 mm. ':''}${mask?'Distant estimates masked; ':''}Coverage heuristic: ${Math.round(100*(d?.confidenceFraction||0))}% near points in both grids.` : `A single source mesh: bright dots are measured locations.${$('showPlate3D').checked?' The visual build plate follows the real Kobra X orientation; X0 / Y0 is the true outer lower-left plate corner and the plate spans 0.0–265.0 mm.':''}`;
+  $('surfaceTopNote').textContent=mesh?.virtual?'B − A · interpolated on shared XY area':mesh?'Measured mesh · relative Z heights':'';
+}
+function paintCoverage(a,b){
+  const canvas=$('coverageCanvas'),c=canvas.getContext('2d'),W=canvas.width,H=canvas.height;
+  c.fillStyle='#121b22';c.fillRect(0,0,W,H);
+  if(!a?.region||!b?.region)return;
+  const union=[Math.min(a.region[0],b.region[0]),Math.min(a.region[1],b.region[1]),Math.max(a.region[2],b.region[2]),Math.max(a.region[3],b.region[3])];
+  const pad=26,uw=union[2]-union[0],uh=union[3]-union[1],factor=Math.min((W-pad*2)/uw,(H-pad*2)/uh);
+  const left=(W-uw*factor)/2,top=(H-uh*factor)/2;
+  const rect =r=>[left+(r[0]-union[0])*factor,top+(union[3]-r[3])*factor,(r[2]-r[0])*factor,(r[3]-r[1])*factor];
+  const drawRect=(r,color)=>{const [x,y,w,h]=rect(r);c.strokeStyle=color;c.lineWidth=2;c.strokeRect(x,y,w,h);};
+  c.fillStyle='#132b31';c.fillRect(...rect(a.region));
+  c.fillStyle='#2d2723';c.fillRect(...rect(b.region));
+  const overlap=[Math.max(a.region[0],b.region[0]),Math.max(a.region[1],b.region[1]),Math.min(a.region[2],b.region[2]),Math.min(a.region[3],b.region[3])];
+  if(overlap[2]>overlap[0]&&overlap[3]>overlap[1]){c.fillStyle='#69828a';c.fillRect(...rect(overlap));}
+  drawRect(a.region,'#55dbd1');drawRect(b.region,'#fba76c');
+  c.fillStyle='#a6b8c1';c.font='10px monospace';c.fillText('X →',W-40,H-9);c.fillText('Y ↑',11,18);
+  c.fillStyle='#55dbd1';c.fillText('A',9,H-29);c.fillStyle='#fba76c';c.fillText('B',9,H-13);
+}
+function meshCSV(m){const rows=[['x_mm','y_mm','z_mm','column','row'].join(',')];const r=m.region||[0,0,m.nx-1,m.ny-1];for(let j=0;j<m.ny;j++)for(let i=0;i<m.nx;i++){const x=r[0]+(r[2]-r[0])*i/(m.nx-1),y=r[1]+(r[3]-r[1])*j/(m.ny-1);rows.push(`${x.toFixed(4)},${y.toFixed(4)},${m.rows[j][i].toFixed(6)},${i},${j}`);}return rows.join('\r\n')+'\r\n';}
+function comparisonCSV(a,b,d){const r=d.mesh.region,rows=['x_mm,y_mm,baseline_z_mm,comparison_z_mm,displayed_delta_mm,raw_delta_mm'];for(let j=0;j<d.mesh.ny;j++)for(let i=0;i<d.mesh.nx;i++){const x=r[0]+(r[2]-r[0])*i/(d.mesh.nx-1),y=r[1]+(r[3]-r[1])*j/(d.mesh.ny-1),aa=sample(a,x,y),bb=sample(b,x,y);rows.push([x,y,aa,bb,d.mesh.rows[j][i],bb-aa].map(z=>z.toFixed(6)).join(','));}return rows.join('\r\n')+'\r\n';}
+function download(name,content,mime){const b=content instanceof Blob?content:new Blob([content],{type:mime});const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),3000);}
+
+function exportMapPng(canvasId,filename){
+  const params=mapRenderCache.get(canvasId);
+  if(!params||!params.m)return;
+  const original=$(canvasId);
+  const canvas=document.createElement('canvas');
+  canvas.width=original.width*PNG_EXPORT_SCALE;
+  canvas.height=original.height*PNG_EXPORT_SCALE;
+  paintMap(canvas,params.m,params.scale,params.showDots,params.showPlate,{...params.opts,exportScale:PNG_EXPORT_SCALE});
+  canvas.toBlob(blob=>blob&&download(filename,blob,'image/png'),'image/png');
+}
+
+function updateSelections(side){const selector=$('mesh'+side),data=state[side];selector.innerHTML='';for(let i=0;i<data.length;i++){const m=data[i],option=document.createElement('option');option.value=String(i);option.textContent=`${m.date} ${m.time} · ${m.mode==='full'?'Full bed':m.mode==='adaptive'?'Adaptive':'Calibration'} · ${m.nx}×${m.ny}`;selector.append(option);}selector.disabled=!data.length;if(data.length)selector.value=String(data.length-1);state['selected'+side]=data.at(-1)||null;}
+async function load(side,file){if(!file)return;setStatus(`Reading ${file.name} locally…`);await new Promise(resolve=>requestAnimationFrame(resolve));try{const parsed=await parseFile(file);if(state.demo){const other=side==='A'?'B':'A';state[other]=[];updateSelections(other);$('label'+other).textContent=other==='A'?'Drop your log here':'Drop your second log';}state[side]=parsed;state.demo=false;updateSelections(side);$('label'+side).textContent=file.name;setStatus(`Loaded ${parsed.length} calibration snapshot${parsed.length===1?'':'s'} from ${file.name}. Nothing was uploaded.`,'success');render();}catch(err){setStatus(err.message,'error');console.error(err);}}
+function render(){
+ const a=state.selectedA,b=state.selectedB;
+ $('results').hidden=!(a||b);if(!(a||b))return;
+ const aStat=a?minMax(a):null,bStat=b?minMax(b):null;
+ $('rangeA').textContent=aStat?fmt(aStat.range)+' mm':'—';$('rangeB').textContent=bStat?fmt(bStat.range)+' mm':'—';
+ $('subA').textContent=a?`${a.nx}×${a.ny} points · ${a.date}`:'No baseline loaded';$('subB').textContent=b?`${b.nx}×${b.ny} points · ${b.date}`:'Load a second calibration';
+ $('infoA').textContent=a?`${a.nx}×${a.ny} pts`:'—';$('infoB').textContent=b?`${b.nx}×${b.ny} pts`:'—';
+ const min=Math.min(...[aStat?.min,bStat?.min].filter(Number.isFinite)),max=Math.max(...[aStat?.max,bStat?.max].filter(Number.isFinite));
+ for(const s of ['A','B']){$('scale'+s+'min').textContent=Number.isFinite(min)?fmt(min,2):'−';$('scale'+s+'max').textContent=Number.isFinite(max)?fmt(max,2):'+';}
+ const plateOverlay=$('showPlate2D').checked;
+ paintMap($('canvasA'),a,{min,max},true,plateOverlay);paintMap($('canvasB'),b,{min,max},true,plateOverlay);
+ $('footerA').textContent=a?(a.region?`${fmt(aStat.min)} to ${fmt(aStat.max)} mm · X ${fmt(a.region[0],1)}–${fmt(a.region[2],1)}`:'XY region unavailable; grid shown by indices'):'No data';
+ $('footerB').textContent=b?(b.region?`${fmt(bStat.min)} to ${fmt(bStat.max)} mm · X ${fmt(b.region[0],1)}–${fmt(b.region[2],1)}`:'XY region unavailable; grid shown by indices'):'No data';
+ let d=a&&b?makeDifference(a,b,$('deltaMode').value):null;
+ state.difference=d?.mesh?d:null;
+ const note=$('compareWarning');note.hidden=true;
+ if(d?.issue){note.textContent=d.issue;note.hidden=false;}
+ else if(d?.mesh){
+  const origA=(a.region[2]-a.region[0])*(a.region[3]-a.region[1]),origB=(b.region[2]-b.region[0])*(b.region[3]-b.region[1]);
+  const shared=(d.mesh.region[2]-d.mesh.region[0])*(d.mesh.region[3]-d.mesh.region[1]);
+  const sameGrid=a.nx===b.nx&&a.ny===b.ny&&a.region.every((v,i)=>Math.abs(v-b.region[i])<1e-7);
+  if(!sameGrid){
+    note.textContent=`Adaptive meshes have different sampling grids or XY bounds. ${Math.round(100*shared/Math.min(origA,origB))}% of the smaller area overlaps. Change values are bilinearly interpolated estimates, not paired measurements. Probe markers show where samples were actually taken.`;
+    note.hidden=false;
+  }
+
+ }
+ if(state.difference){const dd=state.difference,m=dd.mesh,s=minMax(m),smax=Math.max(Math.abs(s.min),Math.abs(s.max),.0001);
+  const diffLabelGrid={cols:Math.min(7,Math.max(a?.nx||5,b?.nx||5,5)),rows:Math.min(7,Math.max(a?.ny||5,b?.ny||5,5))};
+  paintMap($('canvasD'),m,{min:-smax,max:smax},false,plateOverlay,{showValues:true,valueGrid:diffLabelGrid});
+  $('scaleDmin').textContent=fmt(-smax,3);$('scaleDmax').textContent='+'+fmt(smax,3);
+  $('deltaMetric').textContent=fmt(s.range)+' mm';$('subD').textContent=`Difference range · RMS ${fmt(dd.rms)} mm`;
+  $('footerD').textContent=`Interpolated shared XY: ${fmt(m.region[2]-m.region[0],1)} × ${fmt(m.region[3]-m.region[1],1)} mm · ${$('deltaMode').selectedOptions[0].text}`;
+ }else{paintEmpty($('canvasD'),d?.issue?'No shared XY area':'Load two calibrations');$('scaleDmin').textContent='−';$('scaleDmax').textContent='+';$('footerD').textContent=d?.issue||'Load two measurements to calculate B − A';$('deltaMetric').textContent='—';$('subD').textContent='Requires overlapping XY areas';}
+ $('downloadA').disabled=!a||!a.region;$('downloadAPng').disabled=!a;$('downloadB').disabled=!b||!b.region;$('downloadBPng').disabled=!b;$('downloadD').disabled=!state.difference;$('downloadPng').disabled=!state.difference;
+ const chosen=$('surfaceSelect').value,surface=chosen==='A'?a:chosen==='B'?b:state.difference?.mesh;
+ showSurface(surface,chosen,a,b);
+ $('coverageBox').hidden=!(a?.region&&b?.region);
+ if(a?.region&&b?.region){paintCoverage(a,b);$('coverageDescription').textContent=`A: X ${fmt(a.region[0],1)}–${fmt(a.region[2],1)}, Y ${fmt(a.region[1],1)}–${fmt(a.region[3],1)} mm. B: X ${fmt(b.region[0],1)}–${fmt(b.region[2],1)}, Y ${fmt(b.region[1],1)}–${fmt(b.region[3],1)} mm. Shaded overlap is the only region used for difference calculations.`;}
+ const box=$('tiltBox');box.innerHTML='';
+ for(const [key,m] of [['A',a],['B',b]]){
+  if(!m)continue;const pl=fitPlane(pointsOf(m)),card=document.createElement('div');card.className='insight';
+  const heading=document.createElement('h3');heading.textContent=`${key} · Estimated global tilt`;
+  const p=document.createElement('p');
+  p.textContent=pl?`Slope along X: ${fmt(pl.dx*100)} mm / 100 mm. Along Y: ${fmt(pl.dy*100)} mm / 100 mm. Local residual RMS after removing a fitted plane: ${fmt(pl.rms)} mm. This is a regression on the measured region, not a screw-turn instruction.`:'Cannot fit a physical XY plane: probe bounds are missing.';
+  card.append(heading,p);box.append(card);
+ }
+}
+for(const side of ['A','B']){
+ const drop=$('drop'+side),input=$('file'+side);
+ drop.querySelector('.drop-content').addEventListener('click',()=>input.click());
+ drop.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target===drop){e.preventDefault();input.click();}});
+ drop.addEventListener('dragover',e=>{e.preventDefault();drop.classList.add('dragover');});
+ drop.addEventListener('dragleave',()=>drop.classList.remove('dragover'));
+ drop.addEventListener('drop',e=>{e.preventDefault();drop.classList.remove('dragover');load(side,e.dataTransfer.files[0]);});
+ input.addEventListener('change',()=>load(side,input.files[0]));
+ $('mesh'+side).addEventListener('change',e=>{state['selected'+side]=state[side][Number(e.target.value)]||null;render();});
+}
+$('deltaMode').addEventListener('change',render);$('surfaceSelect').addEventListener('change',render);
+$('zScale').addEventListener('input',()=>{zScaleAuto=false;render();});
+$('autoZ').addEventListener('click',()=>{zScaleAuto=true;render();});
+$('resetView').addEventListener('click',()=>{surfaceRenderer?.reset();});
+for(const id of ['showPoints','showPlate2D','showPlate3D','coarseMesh','maskEstimates'])$(id).addEventListener('change',render);
+$('downloadA').addEventListener('click',()=>state.selectedA&&download('kobrax_baseline.csv',meshCSV(state.selectedA),'text/csv;charset=utf-8'));
+$('downloadB').addEventListener('click',()=>state.selectedB&&download('kobrax_comparison.csv',meshCSV(state.selectedB),'text/csv;charset=utf-8'));
+$('downloadAPng').addEventListener('click',()=>state.selectedA&&exportMapPng('canvasA','kobrax_baseline.png'));
+$('downloadBPng').addEventListener('click',()=>state.selectedB&&exportMapPng('canvasB','kobrax_comparison.png'));
+$('downloadD').addEventListener('click',()=>state.difference&&download('kobrax_difference_'+$('deltaMode').value+'.csv',comparisonCSV(state.selectedA,state.selectedB,state.difference),'text/csv;charset=utf-8'));
+$('downloadPng').addEventListener('click',()=>state.difference&&exportMapPng('canvasD','kobrax_difference.png'));
+$('demoBtn').addEventListener('click',()=>{
+ const make=(dx,dy,offset,region,date)=>{const nx=5,ny=7,rows=[];for(let j=0;j<ny;j++){const row=[];for(let i=0;i<nx;i++){const x=i/(nx-1),y=j/(ny-1);row.push((x-.5)*dx+(y-.5)*dy+.10*Math.sin(2.8*x+1.7*y)+.05*Math.cos(7*y+3*x)+offset);}rows.push(row);}return{rows,region,nx,ny,date,time:'12:00:00',source:'Simulation (not printer data)'};};
+ state.A=[make(-.70,.45,.05,[40,20,220,240],'Demo before')];state.B=[make(-.34,.25,-.02,[55,30,235,250],'Demo after')];
+ updateSelections('A');updateSelections('B');$('labelA').textContent='Simulated baseline';$('labelB').textContent='Simulated comparison';state.demo=true;setStatus('SIMULATED DEMO — not real printer data. Drop actual logs to replace either dataset.','success');render();$('results').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+
+window.addEventListener('kobra-plate-ready',()=>{
+  if(state.selectedA||state.selectedB)render();
+  else surfaceRenderer?.draw();
+});
+const runtimeNotice = document.getElementById('runtimeNotice');
+if(runtimeNotice) runtimeNotice.hidden = true;
+document.documentElement.dataset.kobraReady = 'true';
+
+</script>
+</body>
+</html>
